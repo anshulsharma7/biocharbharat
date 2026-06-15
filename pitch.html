@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biochar Bharat — Pitch Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2d7a45;
+      --green-dark: #1a4f2e;
+      --green-light: #e6f4ec;
+      --gold: #e8a020;
+      --orange: #e85c20;
+      --dark: #0e0e18;
+      --text: #1a1a2e;
+      --muted: #5a5a72;
+      --white: #ffffff;
+      --slide-w: 1280px;
+      --slide-h: 720px;
+    }
+
+    html, body {
+      height: 100%;
+      background: #111;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── DECK SHELL ── */
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide-wrapper {
+      width: min(100vw, calc(100vh * 16/9));
+      height: min(100vh, calc(100vw * 9/16));
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      overflow: hidden;
+    }
+    .slide.active { display: flex; }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      padding: 10px 20px;
+      border-radius: 50px;
+      z-index: 200;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    #nav button {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #nav button:hover { background: rgba(255,255,255,0.15); }
+    #nav button:disabled { opacity: 0.3; cursor: default; }
+    #counter { color: rgba(255,255,255,0.6); font-size: 13px; min-width: 48px; text-align: center; }
+    .dots { display: flex; gap: 6px; }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--green); transform: scale(1.4); }
+
+    /* ════════════════════════════════
+       SLIDE STYLES
+    ════════════════════════════════ */
+
+    /* Helpers */
+    .s-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .badge-green { background: rgba(45,122,69,0.2); color: #6fdb8e; border: 1px solid rgba(45,122,69,0.4); }
+    .badge-gold  { background: rgba(232,160,32,0.2); color: var(--gold); border: 1px solid rgba(232,160,32,0.4); }
+    .badge-orange{ background: rgba(232,92,32,0.2);  color: #ff8855; border: 1px solid rgba(232,92,32,0.4); }
+
+    /* ── SLIDE 1: COVER ── */
+    #s1 {
+      background: linear-gradient(135deg, #0a1a0e 0%, #0e1a12 40%, #1a1208 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    #s1::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(45,122,69,0.25) 0%, transparent 70%);
+    }
+    #s1 .cover-logo {
+      font-size: clamp(14px,2vw,18px);
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    #s1 h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px,5.5vw,72px);
+      color: #f5ede0;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    #s1 h1 span { color: #6fdb8e; }
+    #s1 .cover-sub {
+      font-size: clamp(14px,1.8vw,20px);
+      color: rgba(255,255,255,0.55);
+      max-width: 640px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    #s1 .cover-tags { display: flex; gap: 12px; justify-content: center; position: relative; flex-wrap: wrap; }
+    .cover-bottom {
+      position: absolute;
+      bottom: 28px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    .cover-bottom span { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    /* ── SLIDE 2: PROBLEM ── */
+    #s2 {
+      background: #0e0e18;
+      flex-direction: column;
+      padding: clamp(32px,5vw,60px);
+    }
+    #s2 .s-label { color: var(--orange); }
+    #s2 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px,4vw,52px);
+      color: #f5ede0;
+      margin-bottom: 12px;
+      max-width: 700px;
+    }
+    #s2 .prob-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: clamp(13px,1.5vw,17px);
+      margin-bottom: 32px;
+      max-width: 640px;
+    }
+    .prob-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+    .prob-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: clamp(16px,2vw,28px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .prob-card .p-num {
+      font-size: clamp(28px,3.5vw,44px);
+      font-weight: 800;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .prob-card h4 { font-size: clamp(13px,1.4vw,16px); color: #f0e0cc; font-weight: 700; }
+    .prob-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+    /* ── SLIDE 3: ROOT CAUSE ── */
+    #s3 {
+      background: #111118;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+      justify-content: center;
+    }
+    #s3 .s-label { color: var(--orange); }
+    #s3 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 12px;
+    }
+    .cause-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+      flex: 1;
+    }
+    .cause-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,120,30,0.2);
+      border-radius: 16px;
+      padding: clamp(16px,2vw,28px);
+    }
+    .cause-box h4 { font-size: clamp(15px,1.6vw,20px); color: #f0e0cc; margin-bottom: 8px; }
+    .cause-box p { font-size: clamp(12px,1.2vw,15px); color: rgba(255,255,255,0.5); line-height: 1.7; }
+    .cause-box .c-icon { font-size: clamp(24px,3vw,36px); margin-bottom: 10px; }
+    .cause-quote {
+      grid-column: 1 / -1;
+      border: 1px solid rgba(45,122,69,0.3);
+      background: rgba(45,122,69,0.08);
+      border-radius: 16px;
+      padding: clamp(16px,2vw,28px);
+      font-size: clamp(14px,1.6vw,20px);
+      color: #a0e8b0;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ── SLIDE 4: SOLUTION ── */
+    #s4 {
+      background: linear-gradient(135deg, #0a1a0e 0%, #0e1812 100%);
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+      justify-content: center;
+    }
+    #s4 .s-label { color: #6fdb8e; }
+    #s4 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,52px);
+      color: #f5ede0;
+      margin-bottom: 8px;
+    }
+    #s4 .sol-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: clamp(13px,1.4vw,17px);
+      margin-bottom: 28px;
+      max-width: 700px;
+    }
+    .sol-steps {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      flex: 1;
+    }
+    .sol-step {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: clamp(14px,2vw,24px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+    .sol-step + .sol-step { margin-left: 12px; }
+    .sol-step .s-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--green);
+    }
+    .sol-step .s-icon { font-size: clamp(24px,3vw,36px); }
+    .sol-step h4 { font-size: clamp(13px,1.5vw,18px); color: #f0e0cc; font-weight: 700; }
+    .sol-step p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
+    .sol-step .s-result {
+      margin-top: auto;
+      padding: 8px 12px;
+      background: rgba(45,122,69,0.15);
+      border: 1px solid rgba(45,122,69,0.3);
+      border-radius: 8px;
+      font-size: clamp(10px,1vw,13px);
+      color: #6fdb8e;
+      font-weight: 600;
+    }
+
+    /* ── SLIDE 5: MARKET ── */
+    #s5 {
+      background: #0e0e18;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+    }
+    #s5 .s-label { color: var(--gold); }
+    #s5 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,52px);
+      color: #f5ede0;
+      margin-bottom: 24px;
+    }
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+    .market-card {
+      border-radius: 16px;
+      padding: clamp(16px,2vw,28px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .market-card .m-val {
+      font-size: clamp(28px,4vw,52px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .market-card h4 { font-size: clamp(13px,1.4vw,17px); font-weight: 700; margin-bottom: 6px; }
+    .market-card p { font-size: clamp(11px,1.1vw,14px); line-height: 1.6; }
+    .m-tam { background: rgba(232,160,32,0.12); border: 1px solid rgba(232,160,32,0.25); }
+    .m-tam .m-val, .m-tam h4 { color: var(--gold); }
+    .m-tam p { color: rgba(232,160,32,0.6); }
+    .m-sam { background: rgba(45,122,69,0.12); border: 1px solid rgba(45,122,69,0.25); }
+    .m-sam .m-val, .m-sam h4 { color: #6fdb8e; }
+    .m-sam p { color: rgba(111,219,142,0.6); }
+    .m-som { background: rgba(100,140,255,0.1); border: 1px solid rgba(100,140,255,0.25); }
+    .m-som .m-val, .m-som h4 { color: #90aaff; }
+    .m-som p { color: rgba(144,170,255,0.6); }
+    .market-note {
+      margin-top: 16px;
+      font-size: clamp(11px,1.1vw,14px);
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+    }
+
+    /* ── SLIDE 6: BUSINESS MODEL ── */
+    #s6 {
+      background: #111118;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+    }
+    #s6 .s-label { color: #6fdb8e; }
+    #s6 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 20px;
+    }
+    .bm-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      flex: 1;
+    }
+    .bm-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: clamp(14px,1.8vw,24px);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .bm-icon { font-size: clamp(24px,2.8vw,36px); flex-shrink: 0; }
+    .bm-card h4 { font-size: clamp(13px,1.4vw,17px); color: #f0e0cc; font-weight: 700; margin-bottom: 4px; }
+    .bm-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 8px; }
+    .bm-rev { font-size: clamp(11px,1.1vw,14px); font-weight: 700; color: var(--green); }
+    .bm-timeline { font-size: clamp(10px,0.9vw,12px); color: rgba(255,255,255,0.3); margin-top: 2px; }
+
+    /* ── SLIDE 7: FINANCIALS ── */
+    #s7 {
+      background: #0a1a0e;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+    }
+    #s7 .s-label { color: #6fdb8e; }
+    #s7 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 20px;
+    }
+    .fin-table {
+      width: 100%;
+      border-collapse: collapse;
+      flex: 1;
+    }
+    .fin-table th {
+      padding: clamp(10px,1.2vw,16px) clamp(12px,1.5vw,20px);
+      font-size: clamp(11px,1.1vw,14px);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+    .fin-table td {
+      padding: clamp(10px,1.2vw,16px) clamp(12px,1.5vw,20px);
+      font-size: clamp(12px,1.2vw,15px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.7);
+    }
+    .fin-table tr:last-child td { border-bottom: none; }
+    .fin-table .highlight-row td { color: #6fdb8e; font-weight: 700; background: rgba(45,122,69,0.1); }
+    .fin-table td:first-child { color: #f0e8d0; font-weight: 600; }
+    .fin-table td.green { color: #6fdb8e; font-weight: 700; }
+    .fin-note {
+      margin-top: 12px;
+      font-size: clamp(10px,1vw,13px);
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── SLIDE 8: TRACTION / MVP ── */
+    #s8 {
+      background: #0e0e18;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+    }
+    #s8 .s-label { color: var(--gold); }
+    #s8 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 20px;
+    }
+    .mvp-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+    .mvp-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mvp-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .mvp-dot-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .mvp-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .mvp-line { width: 2px; flex: 1; min-height: 20px; background: rgba(255,255,255,0.08); }
+    .mvp-item:last-child .mvp-line { display: none; }
+    .mvp-text h5 { font-size: clamp(12px,1.3vw,15px); color: #f0e0cc; font-weight: 700; margin-bottom: 2px; }
+    .mvp-text p { font-size: clamp(10px,1vw,13px); color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .mvp-text .mvp-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 50px; margin-bottom: 4px; display: inline-block; }
+    .t-now { background: rgba(45,122,69,0.25); color: #6fdb8e; }
+    .t-q1  { background: rgba(232,160,32,0.2); color: var(--gold); }
+    .t-q2  { background: rgba(100,140,255,0.2); color: #90aaff; }
+    .t-q3  { background: rgba(232,92,32,0.2); color: #ff8855; }
+    .mvp-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mvp-metric {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: clamp(12px,1.5vw,20px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mvp-metric h5 { font-size: clamp(12px,1.2vw,15px); color: rgba(255,255,255,0.6); }
+    .mvp-metric span { font-size: clamp(14px,1.6vw,20px); font-weight: 800; color: #6fdb8e; }
+
+    /* ── SLIDE 9: WHY US ── */
+    #s9 {
+      background: linear-gradient(135deg, #0a1a0e 0%, #111118 100%);
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+    }
+    #s9 .s-label { color: #6fdb8e; }
+    #s9 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 20px;
+    }
+    .moat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      flex: 1;
+    }
+    .moat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: clamp(14px,1.8vw,24px);
+    }
+    .moat-card .m-icon { font-size: clamp(24px,3vw,36px); margin-bottom: 10px; }
+    .moat-card h4 { font-size: clamp(13px,1.4vw,17px); color: #f0e0cc; font-weight: 700; margin-bottom: 8px; }
+    .moat-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+    /* ── SLIDE 10: IMPACT ── */
+    #s10 {
+      background: #0e1a0e;
+      padding: clamp(32px,5vw,60px);
+      flex-direction: column;
+      justify-content: center;
+    }
+    #s10 .s-label { color: #6fdb8e; }
+    #s10 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px,3.8vw,48px);
+      color: #f5ede0;
+      margin-bottom: 24px;
+    }
+    .impact-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .impact-num-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(45,122,69,0.2);
+      border-radius: 16px;
+      padding: clamp(14px,1.8vw,24px);
+      text-align: center;
+    }
+    .impact-num-card .in-val {
+      font-size: clamp(24px,3.5vw,44px);
+      font-weight: 800;
+      color: #6fdb8e;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .impact-num-card .in-label {
+      font-size: clamp(11px,1.1vw,14px);
+      color: rgba(255,255,255,0.45);
+      line-height: 1.4;
+    }
+    .un-sdgs {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .un-sdgs span { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.4); margin-right: 4px; }
+    .sdg-tag {
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .sdg1 { background: rgba(232,160,32,0.2); color: var(--gold); }
+    .sdg2 { background: rgba(45,122,69,0.2); color: #6fdb8e; }
+    .sdg3 { background: rgba(100,140,255,0.2); color: #90aaff; }
+    .sdg4 { background: rgba(232,92,32,0.2); color: #ff8855; }
+
+    /* ── SLIDE 11: THE ASK ── */
+    #s11 {
+      background: linear-gradient(135deg, #0a1a0e 0%, #1a1208 50%, #0e0e18 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(32px,5vw,60px);
+      position: relative;
+    }
+    #s11::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(45,122,69,0.2) 0%, transparent 70%);
+    }
+    #s11 .s-label { color: #6fdb8e; position: relative; }
+    #s11 h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px,4.5vw,60px);
+      color: #f5ede0;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    #s11 .ask-sub {
+      color: rgba(255,255,255,0.55);
+      font-size: clamp(14px,1.6vw,18px);
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .ask-boxes {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 36px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .ask-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);
+      min-width: 180px;
+    }
+    .ask-box .ab-val {
+      font-size: clamp(24px,3.5vw,44px);
+      font-weight: 800;
+      color: #6fdb8e;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .ask-box .ab-label { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); }
+    .ask-use {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .ask-use-item {
+      background: rgba(45,122,69,0.12);
+      border: 1px solid rgba(45,122,69,0.25);
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-size: clamp(11px,1.1vw,14px);
+      color: #a0e8b0;
+    }
+    .ask-contact {
+      position: relative;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+    }
+    .ask-contact a {
+      color: rgba(255,255,255,0.4);
+      font-size: clamp(12px,1.2vw,15px);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .ask-contact a:hover { color: white; }
+  </style>
+</head>
+<body>
+
+<div id="deck">
+  <div class="slide-wrapper">
+
+    <!-- SLIDE 1: COVER -->
+    <div class="slide active" id="s1">
+      <div class="cover-logo">🌱 Biochar Bharat</div>
+      <h1>India's Farm Waste<br/>is <span>Killing Us.</span><br/>We're Fixing That.</h1>
+      <p class="cover-sub">
+        Biochar Bharat converts India's 500 million tonne agricultural waste crisis
+        into a farmer income engine, a soil health revolution, and permanent carbon removal.
+      </p>
+      <div class="cover-tags">
+        <span class="tag badge-green">Carbon Removal</span>
+        <span class="tag badge-gold">Farmer Income</span>
+        <span class="tag badge-orange">AgriTech</span>
+        <span class="tag badge-green">Climate Tech</span>
+      </div>
+      <div class="cover-bottom">
+        <span>Seed Round — 2026</span>
+        <span>biocharbharat.official@gmail.com</span>
+        <span>www.biocharbharat.com</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: PROBLEM -->
+    <div class="slide" id="s2">
+      <div class="s-label">The Problem</div>
+      <h2>Every Year, India Burns<br/>Its Own Future</h2>
+      <p class="prob-sub">
+        At harvest season, millions of Indian farmers burn crop stubble — the cheapest way to clear fields.
+        The result is one of the world's worst annual pollution events.
+      </p>
+      <div class="prob-grid">
+        <div class="prob-card">
+          <div class="p-num">500M+</div>
+          <h4>Tonnes of crop residue burned every year</h4>
+          <p>Punjab, Haryana, UP alone account for 35M+ tonnes of paddy straw incinerated each harvest season.</p>
+        </div>
+        <div class="prob-card">
+          <div class="p-num">AQI 999</div>
+          <h4>Delhi air quality during peak burning</h4>
+          <p>Farm fires cause 25% of Delhi's winter PM2.5 pollution. 200+ million people breathe hazardous air for weeks.</p>
+        </div>
+        <div class="prob-card">
+          <div class="p-num">1.67M</div>
+          <h4>Indians die from air pollution annually</h4>
+          <p>Stubble burning is a major seasonal contributor. Farmers themselves breathe smoke 10–15x above safe limits.</p>
+        </div>
+        <div class="prob-card">
+          <div class="p-num">₹50,000 Cr</div>
+          <h4>Soil nutrients lost every season</h4>
+          <p>Burning destroys nitrogen, phosphorus, and potassium in topsoil — forcing farmers to spend more on fertilizers.</p>
+        </div>
+        <div class="prob-card">
+          <div class="p-num">98,000+</div>
+          <h4>Satellite-detected fire hotspots per season</h4>
+          <p>NASA and ISRO satellites record tens of thousands of active farm fires across North India every October–November.</p>
+        </div>
+        <div class="prob-card">
+          <div class="p-num">Zero</div>
+          <h4>Scalable alternatives for farmers today</h4>
+          <p>Manual stubble removal costs ₹4,000–6,000/acre. Most smallholders simply can't afford not to burn.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: ROOT CAUSE -->
+    <div class="slide" id="s3">
+      <div class="s-label">Root Cause</div>
+      <h2>Farmers Aren't the Villains.<br/>They're Trapped.</h2>
+      <div class="cause-layout">
+        <div class="cause-box">
+          <div class="c-icon">⏱️</div>
+          <h4>No Time</h4>
+          <p>The window between paddy harvest and wheat sowing is just 2–3 weeks. Burning clears fields in hours. No alternative is that fast.</p>
+        </div>
+        <div class="cause-box">
+          <div class="c-icon">💸</div>
+          <h4>No Money</h4>
+          <p>Mechanical clearing costs ₹4,000–6,000 per acre. A typical 2-acre smallholder earns ₹40,000–60,000 per season. The math doesn't work.</p>
+        </div>
+        <div class="cause-box">
+          <div class="c-icon">🏛️</div>
+          <h4>Policy Without Incentive</h4>
+          <p>Governments ban burning but offer no profitable alternative. Fines are unenforceable at scale across millions of farms.</p>
+        </div>
+        <div class="cause-box">
+          <div class="c-icon">🔄</div>
+          <h4>No Market for Residue</h4>
+          <p>Crop residue has zero economic value to the farmer today. Until someone pays for it, nothing changes.</p>
+        </div>
+        <div class="cause-quote">
+          "The only way to stop the fires is to make not burning<br/>more profitable than burning." — The Biochar Bharat thesis
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: SOLUTION -->
+    <div class="slide" id="s4">
+      <div class="s-label">The Solution</div>
+      <h2>Waste In. Wealth Out.<br/>Carbon Down.</h2>
+      <p class="sol-sub">
+        Biochar Bharat creates a farmer-powered carbon removal network — turning waste into income,
+        soil health, and verified carbon credits.
+      </p>
+      <div class="sol-steps">
+        <div class="sol-step">
+          <div class="s-num">STEP 01</div>
+          <div class="s-icon">🌾</div>
+          <h4>Collect Residue</h4>
+          <p>Farmers collect paddy straw, husks, and stubble that would otherwise be burned. We provide logistics support.</p>
+          <div class="s-result">→ Waste gets value</div>
+        </div>
+        <div class="sol-step">
+          <div class="s-num">STEP 02</div>
+          <div class="s-icon">⚗️</div>
+          <h4>Pyrolyse into Biochar</h4>
+          <p>Residue is converted in low-cost kilns through pyrolysis — controlled oxygen-limited burning that locks carbon.</p>
+          <div class="s-result">→ Carbon is captured</div>
+        </div>
+        <div class="sol-step">
+          <div class="s-num">STEP 03</div>
+          <div class="s-icon">🌱</div>
+          <h4>Apply to Soil</h4>
+          <p>Biochar is mixed into farmland, improving water retention, soil nutrients, and yield — permanently.</p>
+          <div class="s-result">→ Soil health improves</div>
+        </div>
+        <div class="sol-step">
+          <div class="s-num">STEP 04</div>
+          <div class="s-icon">💰</div>
+          <h4>Earn Carbon Credits</h4>
+          <p>We aggregate verified carbon removal across thousands of farms, sell credits to global buyers, pay farmers directly.</p>
+          <div class="s-result">→ Farmer earns income</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: MARKET -->
+    <div class="slide" id="s5">
+      <div class="s-label">Market Opportunity</div>
+      <h2>A Multi-Billion Dollar<br/>Convergence</h2>
+      <div class="market-grid">
+        <div class="market-card m-tam">
+          <div>
+            <div class="m-val">$2B+</div>
+            <h4>Total Addressable Market</h4>
+            <p>India's voluntary carbon market + agricultural biochar sales + soil amendment market — growing at 30%+ annually as ESG mandates tighten.</p>
+          </div>
+          <span class="tag badge-gold">TAM</span>
+        </div>
+        <div class="market-card m-sam">
+          <div>
+            <div class="m-val">$400M</div>
+            <h4>Serviceable Addressable Market</h4>
+            <p>North India's stubble burning belt — Punjab, Haryana, UP — where 35M+ tonnes of residue is burned annually, all convertible to biochar.</p>
+          </div>
+          <span class="tag badge-green">SAM</span>
+        </div>
+        <div class="market-card m-som">
+          <div>
+            <div class="m-val">$20M</div>
+            <h4>Target — Year 3</h4>
+            <p>10,000 farmer network, 50,000 tonnes biochar/year, 50,000 verified carbon credits sold at $50–200/tonne.</p>
+          </div>
+          <span class="tag" style="background:rgba(100,140,255,0.2);color:#90aaff;border:1px solid rgba(100,140,255,0.3)">SOM</span>
+        </div>
+      </div>
+      <div class="market-note">
+        Biochar carbon credits currently trade at $50–$200/tonne on voluntary markets — 3–10x higher than forestry credits due to permanence. Global voluntary carbon market projected to reach $50B by 2030.
+      </div>
+    </div>
+
+    <!-- SLIDE 6: BUSINESS MODEL -->
+    <div class="slide" id="s6">
+      <div class="s-label">Business Model</div>
+      <h2>Four Revenue Streams,<br/>One Network Effect</h2>
+      <div class="bm-grid">
+        <div class="bm-card">
+          <div class="bm-icon">🌍</div>
+          <div>
+            <h4>Carbon Credit Sales</h4>
+            <p>Aggregate verified biochar carbon removal from our farmer network and sell as premium credits to corporates, governments, and ESG funds globally.</p>
+            <div class="bm-rev">$50–200 per tonne · Primary revenue</div>
+            <div class="bm-timeline">Timeline: Month 12–18 (post MRV certification)</div>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-icon">🪨</div>
+          <div>
+            <h4>Biochar Product Sales</h4>
+            <p>Sell biochar directly to farmers, nurseries, agri-input companies, and horticulture businesses as a premium soil amendment.</p>
+            <div class="bm-rev">₹8,000–15,000 per tonne · Early revenue</div>
+            <div class="bm-timeline">Timeline: Month 3–6 (immediate after production)</div>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-icon">⚙️</div>
+          <div>
+            <h4>Platform & Network Fee</h4>
+            <p>As we scale, charge a % platform fee for connecting carbon buyers to verified farm-level removal — like a carbon marketplace for Indian agriculture.</p>
+            <div class="bm-rev">15–20% transaction fee · Scale revenue</div>
+            <div class="bm-timeline">Timeline: Year 2+ (as network grows)</div>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-icon">🏛️</div>
+          <div>
+            <h4>Government & Grant Projects</h4>
+            <p>Partner with state govts (Punjab, Haryana), NABARD, and international climate funds to deploy biochar programs at district scale.</p>
+            <div class="bm-rev">Project-based contracts · Non-dilutive capital</div>
+            <div class="bm-timeline">Timeline: Month 6–12 (parallel track)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: FINANCIALS -->
+    <div class="slide" id="s7">
+      <div class="s-label">Financial Projections</div>
+      <h2>Unit Economics &amp; Scale</h2>
+      <table class="fin-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>MVP — Year 1</th>
+            <th>Growth — Year 2</th>
+            <th>Scale — Year 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Farmer Partners</td>
+            <td>20–50</td>
+            <td>500–1,000</td>
+            <td>10,000+</td>
+          </tr>
+          <tr>
+            <td>Biochar Produced</td>
+            <td>~50 tonnes</td>
+            <td>2,500 tonnes</td>
+            <td>50,000 tonnes</td>
+          </tr>
+          <tr>
+            <td>Carbon Credits Generated</td>
+            <td>Baseline data only</td>
+            <td>2,000 credits</td>
+            <td>50,000 credits</td>
+          </tr>
+          <tr>
+            <td>Revenue (Biochar Sales)</td>
+            <td>₹4–8 Lakhs</td>
+            <td>₹2–3 Crore</td>
+            <td>₹40 Crore</td>
+          </tr>
+          <tr>
+            <td>Revenue (Carbon Credits)</td>
+            <td>—</td>
+            <td>₹1–2 Crore</td>
+            <td>₹25–40 Crore</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Total Revenue</td>
+            <td class="green">₹4–8 Lakhs</td>
+            <td class="green">₹3–5 Crore</td>
+            <td class="green">₹65–80 Crore</td>
+          </tr>
+          <tr>
+            <td>Farmer Payout (50%)</td>
+            <td>₹2–4 Lakhs</td>
+            <td>₹1.5–2.5 Crore</td>
+            <td>₹30–40 Crore</td>
+          </tr>
+          <tr>
+            <td>Gross Margin</td>
+            <td>~40%</td>
+            <td>~45%</td>
+            <td>~55%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fin-note">* Projections based on ₹10,000/tonne biochar blended price and $80/tonne average carbon credit price. Farmer receives 50% of all revenue generated from their residue.</div>
+    </div>
+
+    <!-- SLIDE 8: TRACTION & ROADMAP -->
+    <div class="slide" id="s8">
+      <div class="s-label">Traction &amp; Roadmap</div>
+      <h2>Where We Are.<br/>Where We're Going.</h2>
+      <div class="mvp-layout">
+        <div class="mvp-timeline">
+          <div class="mvp-item">
+            <div class="mvp-dot-col">
+              <div class="mvp-dot" style="background:#6fdb8e"></div>
+              <div class="mvp-line"></div>
+            </div>
+            <div class="mvp-text">
+              <span class="mvp-tag t-now">NOW</span>
+              <h5>Landing page live · Waitlist open</h5>
+              <p>Website launched at biocharbharat.com. Building initial farmer waitlist and investor pipeline.</p>
+            </div>
+          </div>
+          <div class="mvp-item">
+            <div class="mvp-dot-col">
+              <div class="mvp-dot" style="background:var(--gold)"></div>
+              <div class="mvp-line"></div>
+            </div>
+            <div class="mvp-text">
+              <span class="mvp-tag t-q1">Q3 2026</span>
+              <h5>Pilot: 20 farmers, 1 district</h5>
+              <p>Deploy 2–3 kilns in Punjab/Haryana. Produce first biochar. Run soil health tests. Pay first farmers.</p>
+            </div>
+          </div>
+          <div class="mvp-item">
+            <div class="mvp-dot-col">
+              <div class="mvp-dot" style="background:#90aaff"></div>
+              <div class="mvp-line"></div>
+            </div>
+            <div class="mvp-text">
+              <span class="mvp-tag t-q2">Q4 2026</span>
+              <h5>Prove unit economics · Begin MRV</h5>
+              <p>Validate cost/tonne of biochar vs revenue. Begin MRV documentation for carbon credit certification.</p>
+            </div>
+          </div>
+          <div class="mvp-item">
+            <div class="mvp-dot-col">
+              <div class="mvp-dot" style="background:#ff8855"></div>
+              <div class="mvp-line"></div>
+            </div>
+            <div class="mvp-text">
+              <span class="mvp-tag t-q3">2027</span>
+              <h5>Scale to 1,000 farmers · First credits sold</h5>
+              <p>Expand to 3–5 districts. Get first Verra/Gold Standard certification. Sell first verified carbon credits.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mvp-metrics">
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">MVP Success Metrics</div>
+          <div class="mvp-metric">
+            <h5>Farmer conversion rate</h5>
+            <span>&gt; 60%</span>
+          </div>
+          <div class="mvp-metric">
+            <h5>Cost per tonne biochar</h5>
+            <span>&lt; ₹6,000</span>
+          </div>
+          <div class="mvp-metric">
+            <h5>Farmer retention (next season)</h5>
+            <span>&gt; 70%</span>
+          </div>
+          <div class="mvp-metric">
+            <h5>Yield delta with biochar</h5>
+            <span>&gt; 15%</span>
+          </div>
+          <div class="mvp-metric">
+            <h5>Farmer income added / acre</h5>
+            <span>₹5,000+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: WHY US -->
+    <div class="slide" id="s9">
+      <div class="s-label">Competitive Advantage</div>
+      <h2>Why Biochar Bharat Wins</h2>
+      <div class="moat-grid">
+        <div class="moat-card">
+          <div class="m-icon">🇮🇳</div>
+          <h4>First Mover in India</h4>
+          <p>No one is building a farmer-aggregated biochar carbon network at scale in India. We are defining the category before competition arrives.</p>
+        </div>
+        <div class="moat-card">
+          <div class="m-icon">🤝</div>
+          <h4>Farmer Trust Moat</h4>
+          <p>Relationships with 1,000 farmers can't be replicated overnight. Our network is our deepest defensible asset — it compounds with every farmer added.</p>
+        </div>
+        <div class="moat-card">
+          <div class="m-icon">📊</div>
+          <h4>Data Advantage</h4>
+          <p>Soil health, biochar yield, and carbon data from thousands of Indian farms becomes a unique dataset no competitor can buy or replicate.</p>
+        </div>
+        <div class="moat-card">
+          <div class="m-icon">🏛️</div>
+          <h4>Policy Tailwinds</h4>
+          <p>India's stubble burning ban, carbon credit policy (CCTS), and climate commitments (NDC) all create structural demand for exactly what we do.</p>
+        </div>
+        <div class="moat-card">
+          <div class="m-icon">⚗️</div>
+          <h4>Premium Credit Quality</h4>
+          <p>Biochar is one of the most permanent carbon removal methods. Our credits command $50–200/tonne vs $5–15 for forestry — 10x better economics.</p>
+        </div>
+        <div class="moat-card">
+          <div class="m-icon">🌐</div>
+          <h4>Global Market Access</h4>
+          <p>We sell into the global voluntary carbon market — not dependent on Indian buyers alone. ESG mandates in EU, US, and UK drive demand for our credits.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: IMPACT -->
+    <div class="slide" id="s10">
+      <div class="s-label">Impact at Scale</div>
+      <h2>What 10,000 Farmers<br/>Can Change</h2>
+      <div class="impact-row">
+        <div class="impact-num-card">
+          <div class="in-val">50,000</div>
+          <div class="in-label">Tonnes of CO₂ permanently removed per year</div>
+        </div>
+        <div class="impact-num-card">
+          <div class="in-val">₹500 Cr</div>
+          <div class="in-label">Additional farmer income generated over 5 years</div>
+        </div>
+        <div class="impact-num-card">
+          <div class="in-val">30%</div>
+          <div class="in-label">Average yield increase on biochar-treated farmland</div>
+        </div>
+        <div class="impact-num-card">
+          <div class="in-val">10M+</div>
+          <div class="in-label">People breathing cleaner air as fires are replaced</div>
+        </div>
+      </div>
+      <div class="un-sdgs">
+        <span>UN SDG Alignment:</span>
+        <span class="sdg-tag sdg1">SDG 1 — No Poverty</span>
+        <span class="sdg-tag sdg2">SDG 2 — Zero Hunger</span>
+        <span class="sdg-tag sdg3">SDG 13 — Climate Action</span>
+        <span class="sdg-tag sdg4">SDG 15 — Life on Land</span>
+        <span class="sdg-tag" style="background:rgba(45,122,69,0.2);color:#6fdb8e">SDG 3 — Good Health</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: THE ASK -->
+    <div class="slide" id="s11">
+      <div class="s-label">The Ask</div>
+      <h2>Join Us at the Ground Floor</h2>
+      <p class="ask-sub">We are raising our Seed round to prove unit economics and build India's first farmer carbon network.</p>
+      <div class="ask-boxes">
+        <div class="ask-box">
+          <div class="ab-val">₹50L</div>
+          <div class="ab-label">Seed Round Target</div>
+        </div>
+        <div class="ask-box">
+          <div class="ab-val">18 mo</div>
+          <div class="ab-label">Runway</div>
+        </div>
+        <div class="ask-box">
+          <div class="ab-val">1,000</div>
+          <div class="ab-label">Farmers by end of Year 1</div>
+        </div>
+      </div>
+      <div class="ask-use">
+        <span class="ask-use-item">🔥 Kiln deployment — 40%</span>
+        <span class="ask-use-item">👨‍🌾 Farmer onboarding — 25%</span>
+        <span class="ask-use-item">🔬 MRV & certification — 20%</span>
+        <span class="ask-use-item">⚙️ Tech & ops — 15%</span>
+      </div>
+      <div class="ask-contact">
+        <a href="mailto:biocharbharat.official@gmail.com">biocharbharat.official@gmail.com</a>
+        <a href="tel:+917830501734">+91 78305 01734</a>
+        <a href="https://www.biocharbharat.com">www.biocharbharat.com</a>
+      </div>
+    </div>
+
+  </div><!-- /.slide-wrapper -->
+</div><!-- /#deck -->
+
+<!-- NAV -->
+<div id="nav">
+  <button id="prevBtn" disabled>&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <span id="counter">1 / 11</span>
+  <button id="nextBtn">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('counter');
+  const dotsEl  = document.getElementById('dots');
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, total - 1));
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
+  });
+</script>
+
+</body>
+</html>
