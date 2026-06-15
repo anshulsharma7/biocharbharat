@@ -14,19 +14,37 @@ mobileMenu.querySelectorAll('a').forEach(link => {
 // Waitlist form
 const joinForm = document.getElementById('joinForm');
 const joinSuccess = document.getElementById('joinSuccess');
+const submitBtn = joinForm.querySelector('button[type="submit"]');
 
-joinForm.addEventListener('submit', (e) => {
+joinForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const data = new FormData(joinForm);
-  const payload = Object.fromEntries(data.entries());
 
-  // Store locally for now (replace with API call when backend is ready)
-  const submissions = JSON.parse(localStorage.getItem('bb_waitlist') || '[]');
-  submissions.push({ ...payload, timestamp: new Date().toISOString() });
-  localStorage.setItem('bb_waitlist', JSON.stringify(submissions));
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
 
-  joinForm.style.display = 'none';
-  joinSuccess.style.display = 'block';
+  const formData = new FormData(joinForm);
+  formData.append('access_key', 'REPLACE_WITH_WEB3FORMS_KEY');
+  formData.append('subject', 'New Biochar Bharat Waitlist Registration — ' + formData.get('role'));
+  formData.append('from_name', 'Biochar Bharat Website');
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData,
+    });
+    const json = await res.json();
+
+    if (json.success) {
+      joinForm.style.display = 'none';
+      joinSuccess.style.display = 'block';
+    } else {
+      throw new Error(json.message || 'Submission failed');
+    }
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Join the Waitlist →';
+    alert('Something went wrong. Please email us directly at biocharbharat.official@gmail.com');
+  }
 });
 
 // Smooth scroll offset for sticky nav
