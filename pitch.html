@@ -1,1201 +1,773 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Biochar Bharat — Pitch Deck</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --green: #2d7a45;
-      --green-dark: #1a4f2e;
-      --green-light: #e6f4ec;
-      --gold: #e8a020;
-      --orange: #e85c20;
-      --dark: #0e0e18;
-      --text: #1a1a2e;
-      --muted: #5a5a72;
-      --white: #ffffff;
-      --slide-w: 1280px;
-      --slide-h: 720px;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#2d7a45; --green-d:#1a4f2e; --green-l:#e6f4ec;
+      --gold:#e8a020; --red:#d63031; --smoke:#636e72;
+      --dark:#0d0d0d; --off:#f7f7f4; --white:#ffffff;
+      --text:#111; --muted:#555;
     }
+    html,body{height:100%;background:#1a1a1a;font-family:'Inter',sans-serif;overflow:hidden}
 
-    html, body {
-      height: 100%;
-      background: #111;
-      font-family: 'Inter', sans-serif;
-      overflow: hidden;
+    /* ── SHELL ── */
+    #deck{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
+    .wrap{
+      width:min(100vw, calc(100vh * 16/9));
+      height:min(100vh, calc(100vw * 9/16));
+      position:relative;
     }
-
-    /* ── DECK SHELL ── */
-    #deck {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .slide-wrapper {
-      width: min(100vw, calc(100vh * 16/9));
-      height: min(100vh, calc(100vw * 9/16));
-      position: relative;
-    }
-
-    .slide {
-      position: absolute;
-      inset: 0;
-      display: none;
-      overflow: hidden;
-    }
-    .slide.active { display: flex; }
+    .slide{position:absolute;inset:0;display:none;flex-direction:column}
+    .slide.active{display:flex}
 
     /* ── NAV ── */
-    #nav {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      padding: 10px 20px;
-      border-radius: 50px;
-      z-index: 200;
-      border: 1px solid rgba(255,255,255,0.1);
+    #nav{
+      position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+      display:flex;align-items:center;gap:14px;
+      background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
+      padding:8px 18px;border-radius:50px;z-index:999;
+      border:1px solid rgba(255,255,255,0.12);
     }
-    #nav button {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
+    #nav button{
+      background:none;border:1px solid rgba(255,255,255,0.25);color:#fff;
+      width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;
+      display:flex;align-items:center;justify-content:center;transition:.2s;
     }
-    #nav button:hover { background: rgba(255,255,255,0.15); }
-    #nav button:disabled { opacity: 0.3; cursor: default; }
-    #counter { color: rgba(255,255,255,0.6); font-size: 13px; min-width: 48px; text-align: center; }
-    .dots { display: flex; gap: 6px; }
-    .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .dot.active { background: var(--green); transform: scale(1.4); }
+    #nav button:hover{background:rgba(255,255,255,0.15)}
+    #nav button:disabled{opacity:.25;cursor:default}
+    #ctr{color:rgba(255,255,255,0.5);font-size:12px;min-width:44px;text-align:center}
+    .dots{display:flex;gap:5px}
+    .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);cursor:pointer;transition:.2s}
+    .dot.on{background:var(--green);transform:scale(1.5)}
 
-    /* ════════════════════════════════
-       SLIDE STYLES
-    ════════════════════════════════ */
+    /* ══════════════════════════════════════
+       SHARED LAYOUT HELPERS
+    ══════════════════════════════════════ */
+    .pad{padding:clamp(28px,4.5vw,56px)}
+    .chip{
+      display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;
+      text-transform:uppercase;padding:5px 14px;border-radius:50px;margin-bottom:14px;
+    }
+    .chip-green{background:var(--green-l);color:var(--green-d)}
+    .chip-red{background:#ffeaea;color:#b71c1c}
+    .chip-gold{background:#fff8e1;color:#795800}
+    .chip-dark{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
+    h1,h2,h3{line-height:1.1}
 
-    /* Helpers */
-    .s-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+    /* ══════════════════════════════════════
+       SLIDE 1 — COVER
+    ══════════════════════════════════════ */
+    #s1{
+      background:linear-gradient(150deg,#0a1f0e 0%,#0d1a0d 50%,#1a1208 100%);
+      align-items:center;justify-content:center;text-align:center;
+      position:relative;overflow:hidden;
     }
-    .tag {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    #s1::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 70% 55% at 50% 65%,rgba(45,122,69,.22) 0%,transparent 70%);
     }
-    .badge-green { background: rgba(45,122,69,0.2); color: #6fdb8e; border: 1px solid rgba(45,122,69,0.4); }
-    .badge-gold  { background: rgba(232,160,32,0.2); color: var(--gold); border: 1px solid rgba(232,160,32,0.4); }
-    .badge-orange{ background: rgba(232,92,32,0.2);  color: #ff8855; border: 1px solid rgba(232,92,32,0.4); }
+    #s1 .c-logo{font-size:clamp(12px,1.6vw,17px);color:rgba(255,255,255,.4);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;position:relative}
+    #s1 h1{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(32px,5.5vw,68px);
+      color:#f4efe6;margin-bottom:16px;position:relative;
+    }
+    #s1 h1 em{color:#6fdb8e;font-style:normal}
+    #s1 .c-sub{font-size:clamp(13px,1.7vw,19px);color:rgba(255,255,255,.5);max-width:600px;line-height:1.7;margin-bottom:36px;position:relative}
+    .c-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}
+    .c-tag{padding:6px 16px;border-radius:50px;font-size:12px;font-weight:600;border:1px solid}
+    .ct-g{border-color:rgba(111,219,142,.4);color:#6fdb8e;background:rgba(111,219,142,.08)}
+    .ct-o{border-color:rgba(232,160,32,.4);color:#e8a020;background:rgba(232,160,32,.08)}
+    .ct-r{border-color:rgba(255,120,80,.4);color:#ff9060;background:rgba(255,120,80,.08)}
+    #s1 .c-footer{
+      position:absolute;bottom:22px;left:0;right:0;
+      display:flex;justify-content:center;gap:40px;
+    }
+    #s1 .c-footer span{font-size:11px;color:rgba(255,255,255,.25)}
 
-    /* ── SLIDE 1: COVER ── */
-    #s1 {
-      background: linear-gradient(135deg, #0a1a0e 0%, #0e1a12 40%, #1a1208 100%);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
+    /* ══════════════════════════════════════
+       SLIDE 2 — THE PROBLEM (visual)
+    ══════════════════════════════════════ */
+    #s2{background:#fff}
+    #s2 .s2-top{
+      background:linear-gradient(135deg,#1a0a00,#2d1200);
+      color:#fff;flex:1;
+      display:flex;flex-direction:column;justify-content:center;
+      padding:clamp(24px,4vw,52px);
     }
-    #s1::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(45,122,69,0.25) 0%, transparent 70%);
+    #s2 h2{font-size:clamp(22px,3.5vw,46px);color:#f5ede0;margin-bottom:10px}
+    #s2 .s2-desc{font-size:clamp(12px,1.4vw,16px);color:rgba(255,255,255,.55);max-width:600px;line-height:1.7;margin-bottom:28px}
+    .fire-stats{display:flex;gap:clamp(12px,2vw,28px);flex-wrap:wrap}
+    .fstat{background:rgba(255,255,255,.06);border:1px solid rgba(255,120,30,.25);border-radius:14px;padding:clamp(12px,1.8vw,22px) clamp(14px,2vw,28px)}
+    .fstat .fn{font-size:clamp(24px,3.5vw,44px);font-weight:900;color:#ff7a30;line-height:1}
+    .fstat .fl{font-size:clamp(10px,1.1vw,13px);color:rgba(255,255,255,.45);margin-top:4px;line-height:1.4}
+    #s2 .s2-bot{
+      background:#fff5f0;
+      padding:clamp(14px,2vw,24px) clamp(24px,4vw,52px);
+      display:flex;align-items:center;gap:20px;
     }
-    #s1 .cover-logo {
-      font-size: clamp(14px,2vw,18px);
-      color: rgba(255,255,255,0.5);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      position: relative;
-    }
-    #s1 h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(36px,5.5vw,72px);
-      color: #f5ede0;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      position: relative;
-    }
-    #s1 h1 span { color: #6fdb8e; }
-    #s1 .cover-sub {
-      font-size: clamp(14px,1.8vw,20px);
-      color: rgba(255,255,255,0.55);
-      max-width: 640px;
-      line-height: 1.7;
-      margin-bottom: 40px;
-      position: relative;
-    }
-    #s1 .cover-tags { display: flex; gap: 12px; justify-content: center; position: relative; flex-wrap: wrap; }
-    .cover-bottom {
-      position: absolute;
-      bottom: 28px;
-      left: 0; right: 0;
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-    }
-    .cover-bottom span { font-size: 12px; color: rgba(255,255,255,0.3); }
+    #s2 .s2-bot .b-icon{font-size:clamp(28px,3.5vw,44px);flex-shrink:0}
+    #s2 .s2-bot p{font-size:clamp(12px,1.3vw,16px);color:#5a2020;line-height:1.6}
+    #s2 .s2-bot strong{color:#c0392b}
 
-    /* ── SLIDE 2: PROBLEM ── */
-    #s2 {
-      background: #0e0e18;
-      flex-direction: column;
-      padding: clamp(32px,5vw,60px);
+    /* ══════════════════════════════════════
+       SLIDE 3 — WHY FARMERS BURN
+    ══════════════════════════════════════ */
+    #s3{background:var(--off);padding:clamp(28px,4.5vw,56px)}
+    #s3 h2{font-size:clamp(22px,3.5vw,46px);color:var(--text);margin-bottom:8px}
+    #s3 .s3-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:28px}
+    .trap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.5vw,20px);margin-bottom:20px}
+    .trap-card{
+      border-radius:16px;padding:clamp(16px,2vw,28px);
+      border:2px solid;position:relative;overflow:hidden;
     }
-    #s2 .s-label { color: var(--orange); }
-    #s2 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(28px,4vw,52px);
-      color: #f5ede0;
-      margin-bottom: 12px;
-      max-width: 700px;
+    .trap-card .tc-icon{font-size:clamp(28px,3.5vw,44px);margin-bottom:10px}
+    .trap-card h4{font-size:clamp(13px,1.5vw,18px);font-weight:800;margin-bottom:6px}
+    .trap-card p{font-size:clamp(11px,1.1vw,14px);line-height:1.6}
+    .tc-red{background:#fff5f5;border-color:#ffcdd2}
+    .tc-red h4{color:#c62828} .tc-red p{color:#7f3030}
+    .tc-amber{background:#fff8e1;border-color:#ffe082}
+    .tc-amber h4{color:#e65100} .tc-amber p{color:#7f4000}
+    .tc-blue{background:#e8f4fd;border-color:#b3d9f5}
+    .tc-blue h4{color:#1a5276} .tc-blue p{color:#2e6da4}
+    .trap-result{
+      background:var(--dark);color:#fff;border-radius:14px;
+      padding:clamp(14px,1.8vw,22px) clamp(20px,2.5vw,32px);
+      display:flex;align-items:center;gap:16px;
     }
-    #s2 .prob-sub {
-      color: rgba(255,255,255,0.5);
-      font-size: clamp(13px,1.5vw,17px);
-      margin-bottom: 32px;
-      max-width: 640px;
-    }
-    .prob-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      flex: 1;
-    }
-    .prob-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: clamp(16px,2vw,28px);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .prob-card .p-num {
-      font-size: clamp(28px,3.5vw,44px);
-      font-weight: 800;
-      color: var(--orange);
-      line-height: 1;
-    }
-    .prob-card h4 { font-size: clamp(13px,1.4vw,16px); color: #f0e0cc; font-weight: 700; }
-    .prob-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
+    .trap-result .tr-icon{font-size:clamp(24px,3vw,38px);flex-shrink:0}
+    .trap-result p{font-size:clamp(12px,1.3vw,16px);line-height:1.6}
+    .trap-result strong{color:#ff9060}
 
-    /* ── SLIDE 3: ROOT CAUSE ── */
-    #s3 {
-      background: #111118;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
-      justify-content: center;
+    /* ══════════════════════════════════════
+       SLIDE 4 — THE SOLUTION (cycle)
+    ══════════════════════════════════════ */
+    #s4{background:#fff;padding:clamp(28px,4vw,52px)}
+    #s4 h2{font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px}
+    #s4 .s4-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:24px}
+    .cycle{display:flex;align-items:center;gap:0;flex:1}
+    .cstep{
+      flex:1;background:var(--off);border-radius:16px;
+      border:1.5px solid #e0e0d8;
+      padding:clamp(14px,2vw,28px) clamp(12px,1.8vw,24px);
+      display:flex;flex-direction:column;gap:8px;align-items:center;
+      text-align:center;height:100%;
     }
-    #s3 .s-label { color: var(--orange); }
-    #s3 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 12px;
+    .cstep .cs-icon{
+      width:clamp(44px,6vw,72px);height:clamp(44px,6vw,72px);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:clamp(20px,2.8vw,32px);margin-bottom:4px;flex-shrink:0;
     }
-    .cause-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-top: 24px;
-      flex: 1;
+    .cstep h4{font-size:clamp(13px,1.4vw,17px);font-weight:800;color:var(--text)}
+    .cstep p{font-size:clamp(10px,1.1vw,13px);color:var(--muted);line-height:1.6}
+    .cstep .cs-gain{
+      margin-top:auto;padding:6px 12px;border-radius:50px;
+      font-size:clamp(10px,1vw,12px);font-weight:700;
     }
-    .cause-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,120,30,0.2);
-      border-radius: 16px;
-      padding: clamp(16px,2vw,28px);
-    }
-    .cause-box h4 { font-size: clamp(15px,1.6vw,20px); color: #f0e0cc; margin-bottom: 8px; }
-    .cause-box p { font-size: clamp(12px,1.2vw,15px); color: rgba(255,255,255,0.5); line-height: 1.7; }
-    .cause-box .c-icon { font-size: clamp(24px,3vw,36px); margin-bottom: 10px; }
-    .cause-quote {
-      grid-column: 1 / -1;
-      border: 1px solid rgba(45,122,69,0.3);
-      background: rgba(45,122,69,0.08);
-      border-radius: 16px;
-      padding: clamp(16px,2vw,28px);
-      font-size: clamp(14px,1.6vw,20px);
-      color: #a0e8b0;
-      font-style: italic;
-      text-align: center;
-      line-height: 1.6;
-    }
+    .cs1 .cs-icon{background:#fff3e0} .cs1 .cs-gain{background:#fff3e0;color:#e65100}
+    .cs2 .cs-icon{background:#fce4ec} .cs2 .cs-gain{background:#fce4ec;color:#c62828}
+    .cs3 .cs-icon{background:var(--green-l)} .cs3 .cs-gain{background:var(--green-l);color:var(--green-d)}
+    .cs4 .cs-icon{background:#fff8e1} .cs4 .cs-gain{background:#fff8e1;color:#795800}
+    .carr{font-size:clamp(18px,2.5vw,28px);color:#ccc;flex-shrink:0;padding:0 clamp(4px,0.8vw,12px)}
 
-    /* ── SLIDE 4: SOLUTION ── */
-    #s4 {
-      background: linear-gradient(135deg, #0a1a0e 0%, #0e1812 100%);
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
-      justify-content: center;
-    }
-    #s4 .s-label { color: #6fdb8e; }
-    #s4 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,52px);
-      color: #f5ede0;
-      margin-bottom: 8px;
-    }
-    #s4 .sol-sub {
-      color: rgba(255,255,255,0.5);
-      font-size: clamp(13px,1.4vw,17px);
-      margin-bottom: 28px;
-      max-width: 700px;
-    }
-    .sol-steps {
-      display: flex;
-      gap: 0;
-      align-items: stretch;
-      flex: 1;
-    }
-    .sol-step {
-      flex: 1;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: clamp(14px,2vw,24px);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      position: relative;
-    }
-    .sol-step + .sol-step { margin-left: 12px; }
-    .sol-step .s-num {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--green);
-    }
-    .sol-step .s-icon { font-size: clamp(24px,3vw,36px); }
-    .sol-step h4 { font-size: clamp(13px,1.5vw,18px); color: #f0e0cc; font-weight: 700; }
-    .sol-step p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
-    .sol-step .s-result {
-      margin-top: auto;
-      padding: 8px 12px;
-      background: rgba(45,122,69,0.15);
-      border: 1px solid rgba(45,122,69,0.3);
-      border-radius: 8px;
-      font-size: clamp(10px,1vw,13px);
-      color: #6fdb8e;
-      font-weight: 600;
-    }
+    /* ══════════════════════════════════════
+       SLIDE 5 — THE 3 WINS
+    ══════════════════════════════════════ */
+    #s5{background:#fff;padding:clamp(28px,4vw,52px)}
+    #s5 h2{font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px}
+    #s5 .s5-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:24px}
+    .wins{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,24px);flex:1}
+    .win{border-radius:20px;padding:clamp(20px,2.5vw,36px);display:flex;flex-direction:column;gap:10px}
+    .win .w-icon{font-size:clamp(32px,4.5vw,56px)}
+    .win h3{font-size:clamp(16px,2vw,26px);font-weight:800;line-height:1.2}
+    .win .w-num{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1}
+    .win .w-num-label{font-size:clamp(11px,1.2vw,14px);font-weight:500;margin-top:-4px}
+    .win p{font-size:clamp(11px,1.2vw,14px);line-height:1.7;margin-top:4px}
+    .w-farmer{background:linear-gradient(135deg,#fff8e1,#fdedb0)}
+    .w-farmer h3,.w-farmer .w-num{color:#7a4f00}
+    .w-farmer .w-num-label{color:#a06010}
+    .w-farmer p{color:#5a3a00}
+    .w-soil{background:linear-gradient(135deg,#e8f5e9,#c8e6c9)}
+    .w-soil h3,.w-soil .w-num{color:#1b5e20}
+    .w-soil .w-num-label{color:#2e7d32}
+    .w-soil p{color:#1a4020}
+    .w-carbon{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
+    .w-carbon h3,.w-carbon .w-num{color:#0d47a1}
+    .w-carbon .w-num-label{color:#1565c0}
+    .w-carbon p{color:#0a3060}
 
-    /* ── SLIDE 5: MARKET ── */
-    #s5 {
-      background: #0e0e18;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
+    /* ══════════════════════════════════════
+       SLIDE 6 — HOW YOU EARN (money flow)
+    ══════════════════════════════════════ */
+    #s6{background:var(--off);padding:clamp(28px,4vw,52px)}
+    #s6 h2{font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px}
+    #s6 .s6-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:24px}
+    .flow{display:flex;align-items:center;gap:0;margin-bottom:clamp(14px,2vw,24px)}
+    .fbox{
+      flex:1;background:#fff;border-radius:14px;border:1.5px solid #e0e0d8;
+      padding:clamp(12px,1.8vw,22px);text-align:center;
     }
-    #s5 .s-label { color: var(--gold); }
-    #s5 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,52px);
-      color: #f5ede0;
-      margin-bottom: 24px;
-    }
-    .market-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      flex: 1;
-    }
-    .market-card {
-      border-radius: 16px;
-      padding: clamp(16px,2vw,28px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .market-card .m-val {
-      font-size: clamp(28px,4vw,52px);
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .market-card h4 { font-size: clamp(13px,1.4vw,17px); font-weight: 700; margin-bottom: 6px; }
-    .market-card p { font-size: clamp(11px,1.1vw,14px); line-height: 1.6; }
-    .m-tam { background: rgba(232,160,32,0.12); border: 1px solid rgba(232,160,32,0.25); }
-    .m-tam .m-val, .m-tam h4 { color: var(--gold); }
-    .m-tam p { color: rgba(232,160,32,0.6); }
-    .m-sam { background: rgba(45,122,69,0.12); border: 1px solid rgba(45,122,69,0.25); }
-    .m-sam .m-val, .m-sam h4 { color: #6fdb8e; }
-    .m-sam p { color: rgba(111,219,142,0.6); }
-    .m-som { background: rgba(100,140,255,0.1); border: 1px solid rgba(100,140,255,0.25); }
-    .m-som .m-val, .m-som h4 { color: #90aaff; }
-    .m-som p { color: rgba(144,170,255,0.6); }
-    .market-note {
-      margin-top: 16px;
-      font-size: clamp(11px,1.1vw,14px);
-      color: rgba(255,255,255,0.35);
-      text-align: center;
-    }
+    .fbox .fb-icon{font-size:clamp(24px,3.2vw,40px);margin-bottom:6px}
+    .fbox h5{font-size:clamp(12px,1.3vw,16px);font-weight:800;color:var(--text);margin-bottom:4px}
+    .fbox p{font-size:clamp(10px,1vw,13px);color:var(--muted)}
+    .farr{font-size:clamp(16px,2.2vw,28px);color:#ccc;flex-shrink:0;padding:0 clamp(4px,0.8vw,10px)}
+    .rev-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.5vw,18px)}
+    .rcard{border-radius:14px;padding:clamp(12px,1.8vw,22px);border-left:4px solid}
+    .rcard h5{font-size:clamp(12px,1.3vw,16px);font-weight:800;margin-bottom:4px}
+    .rcard .r-when{font-size:clamp(10px,1vw,12px);font-weight:600;padding:3px 10px;border-radius:50px;display:inline-block;margin-bottom:6px}
+    .rcard p{font-size:clamp(10px,1.1vw,13px);line-height:1.6}
+    .rcard .r-amount{font-size:clamp(14px,1.6vw,20px);font-weight:800;margin-top:8px}
+    .rc1{background:#fff8e1;border-color:var(--gold)} .rc1 h5,.rc1 .r-amount{color:#7a4f00} .rc1 .r-when{background:#ffe082;color:#7a4f00} .rc1 p{color:#8a5f00}
+    .rc2{background:#e8f5e9;border-color:var(--green)} .rc2 h5,.rc2 .r-amount{color:#1b5e20} .rc2 .r-when{background:#c8e6c9;color:#1b5e20} .rc2 p{color:#2a6030}
+    .rc3{background:#e3f2fd;border-color:#1976d2} .rc3 h5,.rc3 .r-amount{color:#0d47a1} .rc3 .r-when{background:#bbdefb;color:#0d47a1} .rc3 p{color:#1a4a80}
 
-    /* ── SLIDE 6: BUSINESS MODEL ── */
-    #s6 {
-      background: #111118;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
+    /* ══════════════════════════════════════
+       SLIDE 7 — MARKET SIZE
+    ══════════════════════════════════════ */
+    #s7{
+      background:linear-gradient(150deg,#0a1f0e,#0d1a10);
+      padding:clamp(28px,4vw,52px);color:#fff;
     }
-    #s6 .s-label { color: #6fdb8e; }
-    #s6 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 20px;
+    #s7 h2{font-size:clamp(22px,3.5vw,44px);color:#f5ede0;margin-bottom:6px}
+    #s7 .s7-sub{font-size:clamp(12px,1.4vw,16px);color:rgba(255,255,255,.5);margin-bottom:28px}
+    .market-circles{display:flex;align-items:center;justify-content:center;gap:clamp(20px,3vw,40px);flex:1}
+    .mcircle{
+      border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;position:relative;
     }
-    .bm-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      flex: 1;
+    .mc1{
+      width:clamp(200px,28vw,340px);height:clamp(200px,28vw,340px);
+      background:rgba(232,160,32,.15);border:2px solid rgba(232,160,32,.4);
     }
-    .bm-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: clamp(14px,1.8vw,24px);
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
+    .mc2{
+      width:clamp(150px,21vw,260px);height:clamp(150px,21vw,260px);
+      background:rgba(45,122,69,.2);border:2px solid rgba(45,122,69,.5);
+      position:absolute;
     }
-    .bm-icon { font-size: clamp(24px,2.8vw,36px); flex-shrink: 0; }
-    .bm-card h4 { font-size: clamp(13px,1.4vw,17px); color: #f0e0cc; font-weight: 700; margin-bottom: 4px; }
-    .bm-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 8px; }
-    .bm-rev { font-size: clamp(11px,1.1vw,14px); font-weight: 700; color: var(--green); }
-    .bm-timeline { font-size: clamp(10px,0.9vw,12px); color: rgba(255,255,255,0.3); margin-top: 2px; }
+    .mc3{
+      width:clamp(100px,14vw,180px);height:clamp(100px,14vw,180px);
+      background:rgba(100,140,255,.2);border:2px solid rgba(100,140,255,.5);
+      position:absolute;
+    }
+    .mc-wrap{position:relative;display:flex;align-items:center;justify-content:center;
+      width:clamp(200px,28vw,340px);height:clamp(200px,28vw,340px)}
+    .mc-val{font-size:clamp(22px,3.5vw,44px);font-weight:900;line-height:1}
+    .mc-label{font-size:clamp(9px,1.1vw,13px);margin-top:4px;font-weight:600;padding:0 10px;text-align:center}
+    .mc-sub{font-size:clamp(8px,0.9vw,11px);margin-top:2px;opacity:.6}
+    .mc1 .mc-val{color:var(--gold)} .mc1 .mc-label{color:rgba(232,160,32,.8)}
+    .mc2 .mc-val{color:#6fdb8e} .mc2 .mc-label{color:rgba(111,219,142,.8)}
+    .mc3 .mc-val{color:#90aaff} .mc3 .mc-label{color:rgba(144,170,255,.8)}
+    .market-points{display:flex;flex-direction:column;gap:12px;flex:1;max-width:320px}
+    .mpoint{
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+      border-radius:12px;padding:clamp(10px,1.4vw,18px);
+    }
+    .mpoint h5{font-size:clamp(12px,1.3vw,15px);color:#f0e8d0;font-weight:700;margin-bottom:4px}
+    .mpoint p{font-size:clamp(10px,1.1vw,13px);color:rgba(255,255,255,.45);line-height:1.5}
 
-    /* ── SLIDE 7: FINANCIALS ── */
-    #s7 {
-      background: #0a1a0e;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
+    /* ══════════════════════════════════════
+       SLIDE 8 — MVP: WHAT WE'RE DOING NOW
+    ══════════════════════════════════════ */
+    #s8{background:#fff;padding:clamp(28px,4vw,52px)}
+    #s8 h2{font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px}
+    #s8 .s8-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:24px}
+    .mvp-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,36px);flex:1}
+    .mvp-left{display:flex;flex-direction:column;gap:clamp(10px,1.5vw,16px)}
+    .mvp-phase{
+      border-radius:14px;border:1.5px solid;
+      padding:clamp(12px,1.6vw,20px) clamp(14px,1.8vw,24px);
     }
-    #s7 .s-label { color: #6fdb8e; }
-    #s7 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 20px;
+    .mvp-phase .ph-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .mvp-phase .ph-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    .mvp-phase .ph-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px}
+    .mvp-phase h5{font-size:clamp(12px,1.4vw,16px);font-weight:800;color:var(--text);margin-bottom:4px}
+    .mvp-phase p{font-size:clamp(10px,1.1vw,13px);color:var(--muted);line-height:1.5}
+    .ph-now{background:#e8f5e9;border-color:#a5d6a7}
+    .ph-now .ph-dot{background:var(--green)} .ph-now .ph-tag{background:#c8e6c9;color:#1b5e20}
+    .ph-q3{background:#fff8e1;border-color:#ffe082}
+    .ph-q3 .ph-dot{background:var(--gold)} .ph-q3 .ph-tag{background:#ffe082;color:#7a4f00}
+    .ph-q4{background:#e3f2fd;border-color:#bbdefb}
+    .ph-q4 .ph-dot{background:#1976d2} .ph-q4 .ph-tag{background:#bbdefb;color:#0d47a1}
+    .ph-y2{background:#fce4ec;border-color:#f48fb1}
+    .ph-y2 .ph-dot{background:#c2185b} .ph-y2 .ph-tag{background:#f48fb1;color:#880e4f}
+    .mvp-right{display:flex;flex-direction:column;gap:clamp(10px,1.5vw,16px)}
+    .mvp-right h4{font-size:clamp(13px,1.4vw,17px);font-weight:800;color:var(--text)}
+    .prove-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.2vw,14px);flex:1}
+    .pcard{
+      background:var(--off);border-radius:12px;border:1.5px solid #e0e0d8;
+      padding:clamp(10px,1.4vw,18px);
     }
-    .fin-table {
-      width: 100%;
-      border-collapse: collapse;
-      flex: 1;
-    }
-    .fin-table th {
-      padding: clamp(10px,1.2vw,16px) clamp(12px,1.5vw,20px);
-      font-size: clamp(11px,1.1vw,14px);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
-    }
-    .fin-table td {
-      padding: clamp(10px,1.2vw,16px) clamp(12px,1.5vw,20px);
-      font-size: clamp(12px,1.2vw,15px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.7);
-    }
-    .fin-table tr:last-child td { border-bottom: none; }
-    .fin-table .highlight-row td { color: #6fdb8e; font-weight: 700; background: rgba(45,122,69,0.1); }
-    .fin-table td:first-child { color: #f0e8d0; font-weight: 600; }
-    .fin-table td.green { color: #6fdb8e; font-weight: 700; }
-    .fin-note {
-      margin-top: 12px;
-      font-size: clamp(10px,1vw,13px);
-      color: rgba(255,255,255,0.3);
-    }
+    .pcard .pc-q{font-size:clamp(10px,1vw,13px);color:var(--muted);margin-bottom:4px}
+    .pcard .pc-a{font-size:clamp(14px,1.8vw,22px);font-weight:900;color:var(--green)}
+    .pcard .pc-target{font-size:clamp(10px,1vw,12px);color:var(--muted)}
 
-    /* ── SLIDE 8: TRACTION / MVP ── */
-    #s8 {
-      background: #0e0e18;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
-    }
-    #s8 .s-label { color: var(--gold); }
-    #s8 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 20px;
-    }
-    .mvp-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      flex: 1;
-    }
-    .mvp-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .mvp-item {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    .mvp-dot-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
-    .mvp-dot {
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 4px;
-    }
-    .mvp-line { width: 2px; flex: 1; min-height: 20px; background: rgba(255,255,255,0.08); }
-    .mvp-item:last-child .mvp-line { display: none; }
-    .mvp-text h5 { font-size: clamp(12px,1.3vw,15px); color: #f0e0cc; font-weight: 700; margin-bottom: 2px; }
-    .mvp-text p { font-size: clamp(10px,1vw,13px); color: rgba(255,255,255,0.45); line-height: 1.5; }
-    .mvp-text .mvp-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 50px; margin-bottom: 4px; display: inline-block; }
-    .t-now { background: rgba(45,122,69,0.25); color: #6fdb8e; }
-    .t-q1  { background: rgba(232,160,32,0.2); color: var(--gold); }
-    .t-q2  { background: rgba(100,140,255,0.2); color: #90aaff; }
-    .t-q3  { background: rgba(232,92,32,0.2); color: #ff8855; }
-    .mvp-metrics {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .mvp-metric {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: clamp(12px,1.5vw,20px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .mvp-metric h5 { font-size: clamp(12px,1.2vw,15px); color: rgba(255,255,255,0.6); }
-    .mvp-metric span { font-size: clamp(14px,1.6vw,20px); font-weight: 800; color: #6fdb8e; }
+    /* ══════════════════════════════════════
+       SLIDE 9 — PROJECTIONS (simple)
+    ══════════════════════════════════════ */
+    #s9{background:var(--off);padding:clamp(28px,4vw,52px)}
+    #s9 h2{font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px}
+    #s9 .s9-sub{font-size:clamp(12px,1.4vw,16px);color:var(--muted);margin-bottom:24px}
+    .proj-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,24px);flex:1}
+    .pstage{border-radius:20px;padding:clamp(18px,2.5vw,32px);display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+    .ps1{background:#fff;border:2px solid #e0e0d8}
+    .ps2{background:linear-gradient(135deg,#e8f5e9,#f1faf3);border:2px solid #a5d6a7}
+    .ps3{background:linear-gradient(135deg,#e3f2fd,#f0f7ff);border:2px solid #90caf9}
+    .pstage .ps-tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;align-self:flex-start}
+    .ps1 .ps-tag{background:#f0f0ea;color:#555}
+    .ps2 .ps-tag{background:#c8e6c9;color:#1b5e20}
+    .ps3 .ps-tag{background:#bbdefb;color:#0d47a1}
+    .pstage h4{font-size:clamp(16px,2vw,24px);font-weight:900;color:var(--text)}
+    .pstage .ps-farmers{font-size:clamp(20px,3vw,40px);font-weight:900;line-height:1}
+    .ps1 .ps-farmers{color:#aaa}
+    .ps2 .ps-farmers{color:var(--green)}
+    .ps3 .ps-farmers{color:#1565c0}
+    .pstage .ps-label{font-size:clamp(10px,1.1vw,13px);color:var(--muted);margin-top:-8px}
+    .ps-items{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+    .ps-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+    .ps-item:last-child{border-bottom:none}
+    .ps-item span:first-child{font-size:clamp(10px,1.1vw,13px);color:var(--muted)}
+    .ps-item span:last-child{font-size:clamp(11px,1.2vw,14px);font-weight:700;color:var(--text)}
+    .ps3 .ps-item span:last-child{color:#1565c0}
+    .ps2 .ps-item span:last-child{color:var(--green-d)}
 
-    /* ── SLIDE 9: WHY US ── */
-    #s9 {
-      background: linear-gradient(135deg, #0a1a0e 0%, #111118 100%);
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
+    /* ══════════════════════════════════════
+       SLIDE 10 — THE ASK
+    ══════════════════════════════════════ */
+    #s10{
+      background:linear-gradient(150deg,#0a1f0e,#0d1a10);
+      padding:clamp(28px,4vw,52px);
+      align-items:center;justify-content:center;text-align:center;
+      position:relative;overflow:hidden;
     }
-    #s9 .s-label { color: #6fdb8e; }
-    #s9 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 20px;
+    #s10::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 50%,rgba(45,122,69,.2) 0%,transparent 70%)}
+    #s10 h2{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,56px);color:#f5ede0;margin-bottom:10px;position:relative}
+    #s10 .a-sub{font-size:clamp(13px,1.6vw,18px);color:rgba(255,255,255,.5);margin-bottom:32px;position:relative;max-width:580px}
+    .ask-row{display:flex;gap:clamp(12px,1.8vw,24px);justify-content:center;margin-bottom:28px;flex-wrap:wrap;position:relative}
+    .abox{
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+      border-radius:16px;padding:clamp(16px,2.2vw,28px) clamp(20px,2.8vw,40px);
     }
-    .moat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      flex: 1;
-    }
-    .moat-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: clamp(14px,1.8vw,24px);
-    }
-    .moat-card .m-icon { font-size: clamp(24px,3vw,36px); margin-bottom: 10px; }
-    .moat-card h4 { font-size: clamp(13px,1.4vw,17px); color: #f0e0cc; font-weight: 700; margin-bottom: 8px; }
-    .moat-card p { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); line-height: 1.6; }
-
-    /* ── SLIDE 10: IMPACT ── */
-    #s10 {
-      background: #0e1a0e;
-      padding: clamp(32px,5vw,60px);
-      flex-direction: column;
-      justify-content: center;
-    }
-    #s10 .s-label { color: #6fdb8e; }
-    #s10 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px,3.8vw,48px);
-      color: #f5ede0;
-      margin-bottom: 24px;
-    }
-    .impact-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .impact-num-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(45,122,69,0.2);
-      border-radius: 16px;
-      padding: clamp(14px,1.8vw,24px);
-      text-align: center;
-    }
-    .impact-num-card .in-val {
-      font-size: clamp(24px,3.5vw,44px);
-      font-weight: 800;
-      color: #6fdb8e;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .impact-num-card .in-label {
-      font-size: clamp(11px,1.1vw,14px);
-      color: rgba(255,255,255,0.45);
-      line-height: 1.4;
-    }
-    .un-sdgs {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .un-sdgs span { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.4); margin-right: 4px; }
-    .sdg-tag {
-      padding: 5px 14px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .sdg1 { background: rgba(232,160,32,0.2); color: var(--gold); }
-    .sdg2 { background: rgba(45,122,69,0.2); color: #6fdb8e; }
-    .sdg3 { background: rgba(100,140,255,0.2); color: #90aaff; }
-    .sdg4 { background: rgba(232,92,32,0.2); color: #ff8855; }
-
-    /* ── SLIDE 11: THE ASK ── */
-    #s11 {
-      background: linear-gradient(135deg, #0a1a0e 0%, #1a1208 50%, #0e0e18 100%);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: clamp(32px,5vw,60px);
-      position: relative;
-    }
-    #s11::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(45,122,69,0.2) 0%, transparent 70%);
-    }
-    #s11 .s-label { color: #6fdb8e; position: relative; }
-    #s11 h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(28px,4.5vw,60px);
-      color: #f5ede0;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    #s11 .ask-sub {
-      color: rgba(255,255,255,0.55);
-      font-size: clamp(14px,1.6vw,18px);
-      margin-bottom: 36px;
-      position: relative;
-    }
-    .ask-boxes {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-bottom: 36px;
-      position: relative;
-      flex-wrap: wrap;
-    }
-    .ask-box {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);
-      min-width: 180px;
-    }
-    .ask-box .ab-val {
-      font-size: clamp(24px,3.5vw,44px);
-      font-weight: 800;
-      color: #6fdb8e;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .ask-box .ab-label { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.45); }
-    .ask-use {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 36px;
-      position: relative;
-      flex-wrap: wrap;
-    }
-    .ask-use-item {
-      background: rgba(45,122,69,0.12);
-      border: 1px solid rgba(45,122,69,0.25);
-      border-radius: 50px;
-      padding: 8px 18px;
-      font-size: clamp(11px,1.1vw,14px);
-      color: #a0e8b0;
-    }
-    .ask-contact {
-      position: relative;
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-    }
-    .ask-contact a {
-      color: rgba(255,255,255,0.4);
-      font-size: clamp(12px,1.2vw,15px);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .ask-contact a:hover { color: white; }
+    .abox .av{font-size:clamp(26px,4vw,52px);font-weight:900;color:#6fdb8e;line-height:1}
+    .abox .al{font-size:clamp(11px,1.2vw,14px);color:rgba(255,255,255,.45);margin-top:4px}
+    .use-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;position:relative}
+    .use-tag{padding:7px 16px;border-radius:50px;font-size:clamp(11px,1.2vw,14px);font-weight:600;background:rgba(45,122,69,.2);color:#a0e8b0;border:1px solid rgba(45,122,69,.3)}
+    .ask-contact{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;position:relative}
+    .ask-contact a{font-size:clamp(12px,1.3vw,15px);color:rgba(255,255,255,.4);text-decoration:none;transition:.2s}
+    .ask-contact a:hover{color:#fff}
   </style>
 </head>
 <body>
+<div id="deck"><div class="wrap">
 
-<div id="deck">
-  <div class="slide-wrapper">
+  <!-- ① COVER -->
+  <div class="slide active" id="s1">
+    <div class="c-logo">🌱 Biochar Bharat</div>
+    <h1>India Burns 500 Million<br/>Tonnes of Farm Waste.<br/><em>We Turn It Into Income.</em></h1>
+    <p class="c-sub">A farmer-powered network that converts crop waste into biochar — giving farmers extra income, healthier soil, and selling the carbon removal to the world.</p>
+    <div class="c-tags">
+      <span class="c-tag ct-g">Carbon Removal</span>
+      <span class="c-tag ct-o">Farmer Income</span>
+      <span class="c-tag ct-r">Pollution Solution</span>
+      <span class="c-tag ct-g">Climate Tech</span>
+    </div>
+    <div class="c-footer">
+      <span>Seed Round · 2026</span>
+      <span>biocharbharat.official@gmail.com</span>
+      <span>www.biocharbharat.com</span>
+    </div>
+  </div>
 
-    <!-- SLIDE 1: COVER -->
-    <div class="slide active" id="s1">
-      <div class="cover-logo">🌱 Biochar Bharat</div>
-      <h1>India's Farm Waste<br/>is <span>Killing Us.</span><br/>We're Fixing That.</h1>
-      <p class="cover-sub">
-        Biochar Bharat converts India's 500 million tonne agricultural waste crisis
-        into a farmer income engine, a soil health revolution, and permanent carbon removal.
-      </p>
-      <div class="cover-tags">
-        <span class="tag badge-green">Carbon Removal</span>
-        <span class="tag badge-gold">Farmer Income</span>
-        <span class="tag badge-orange">AgriTech</span>
-        <span class="tag badge-green">Climate Tech</span>
-      </div>
-      <div class="cover-bottom">
-        <span>Seed Round — 2026</span>
-        <span>biocharbharat.official@gmail.com</span>
-        <span>www.biocharbharat.com</span>
+  <!-- ② THE PROBLEM -->
+  <div class="slide" id="s2">
+    <div class="s2-top">
+      <span class="chip chip-dark">The Problem</span>
+      <h2>Every harvest, farmers burn their fields.<br/>The smoke chokes 200 million people.</h2>
+      <p class="s2-desc">Across Punjab, Haryana and UP — millions of farmers burn leftover crop stubble every October. It's the cheapest and fastest way to clear fields before the next sowing. The result is catastrophic.</p>
+      <div class="fire-stats">
+        <div class="fstat"><div class="fn">500M+</div><div class="fl">Tonnes of<br/>crop waste burned</div></div>
+        <div class="fstat"><div class="fn">AQI 999</div><div class="fl">Delhi air during<br/>peak burning season</div></div>
+        <div class="fstat"><div class="fn">98,000+</div><div class="fl">Fire hotspots<br/>per season (NASA)</div></div>
+        <div class="fstat"><div class="fn">₹50,000 Cr</div><div class="fl">Soil nutrients<br/>destroyed yearly</div></div>
       </div>
     </div>
+    <div class="s2-bot">
+      <div class="b-icon">😤</div>
+      <p>This isn't just a pollution problem — it's a <strong>farmer poverty problem.</strong> They burn because they have no better option. Until now.</p>
+    </div>
+  </div>
 
-    <!-- SLIDE 2: PROBLEM -->
-    <div class="slide" id="s2">
-      <div class="s-label">The Problem</div>
-      <h2>Every Year, India Burns<br/>Its Own Future</h2>
-      <p class="prob-sub">
-        At harvest season, millions of Indian farmers burn crop stubble — the cheapest way to clear fields.
-        The result is one of the world's worst annual pollution events.
-      </p>
-      <div class="prob-grid">
-        <div class="prob-card">
-          <div class="p-num">500M+</div>
-          <h4>Tonnes of crop residue burned every year</h4>
-          <p>Punjab, Haryana, UP alone account for 35M+ tonnes of paddy straw incinerated each harvest season.</p>
-        </div>
-        <div class="prob-card">
-          <div class="p-num">AQI 999</div>
-          <h4>Delhi air quality during peak burning</h4>
-          <p>Farm fires cause 25% of Delhi's winter PM2.5 pollution. 200+ million people breathe hazardous air for weeks.</p>
-        </div>
-        <div class="prob-card">
-          <div class="p-num">1.67M</div>
-          <h4>Indians die from air pollution annually</h4>
-          <p>Stubble burning is a major seasonal contributor. Farmers themselves breathe smoke 10–15x above safe limits.</p>
-        </div>
-        <div class="prob-card">
-          <div class="p-num">₹50,000 Cr</div>
-          <h4>Soil nutrients lost every season</h4>
-          <p>Burning destroys nitrogen, phosphorus, and potassium in topsoil — forcing farmers to spend more on fertilizers.</p>
-        </div>
-        <div class="prob-card">
-          <div class="p-num">98,000+</div>
-          <h4>Satellite-detected fire hotspots per season</h4>
-          <p>NASA and ISRO satellites record tens of thousands of active farm fires across North India every October–November.</p>
-        </div>
-        <div class="prob-card">
-          <div class="p-num">Zero</div>
-          <h4>Scalable alternatives for farmers today</h4>
-          <p>Manual stubble removal costs ₹4,000–6,000/acre. Most smallholders simply can't afford not to burn.</p>
-        </div>
+  <!-- ③ WHY FARMERS BURN -->
+  <div class="slide" id="s3" style="background:var(--off);padding:clamp(28px,4.5vw,56px)">
+    <span class="chip chip-red">Root Cause</span>
+    <h2 style="font-size:clamp(22px,3.5vw,46px);color:var(--text);margin-bottom:6px">Farmers Are Trapped.<br/>Burning Is Their Only Option.</h2>
+    <p class="s3-sub">Understanding why is the key to solving it.</p>
+    <div class="trap-grid">
+      <div class="trap-card tc-red">
+        <div class="tc-icon">💸</div>
+        <h4>No Money to Clear Fields</h4>
+        <p>Manual stubble removal costs <strong>₹4,000–6,000 per acre.</strong> A smallholder with 2 acres simply can't afford it. Burning is free.</p>
+      </div>
+      <div class="trap-card tc-amber">
+        <div class="tc-icon">⏱️</div>
+        <h4>No Time — 2 Week Window</h4>
+        <p>The gap between paddy harvest and wheat sowing is only <strong>14–21 days.</strong> Burning clears a field in hours. Nothing else is that fast.</p>
+      </div>
+      <div class="trap-card tc-blue">
+        <div class="tc-icon">🚫</div>
+        <h4>No Value for the Waste</h4>
+        <p>Crop residue has <strong>zero market value</strong> today. Nobody buys it. Nobody wants it. So farmers destroy it instead of selling it.</p>
       </div>
     </div>
-
-    <!-- SLIDE 3: ROOT CAUSE -->
-    <div class="slide" id="s3">
-      <div class="s-label">Root Cause</div>
-      <h2>Farmers Aren't the Villains.<br/>They're Trapped.</h2>
-      <div class="cause-layout">
-        <div class="cause-box">
-          <div class="c-icon">⏱️</div>
-          <h4>No Time</h4>
-          <p>The window between paddy harvest and wheat sowing is just 2–3 weeks. Burning clears fields in hours. No alternative is that fast.</p>
-        </div>
-        <div class="cause-box">
-          <div class="c-icon">💸</div>
-          <h4>No Money</h4>
-          <p>Mechanical clearing costs ₹4,000–6,000 per acre. A typical 2-acre smallholder earns ₹40,000–60,000 per season. The math doesn't work.</p>
-        </div>
-        <div class="cause-box">
-          <div class="c-icon">🏛️</div>
-          <h4>Policy Without Incentive</h4>
-          <p>Governments ban burning but offer no profitable alternative. Fines are unenforceable at scale across millions of farms.</p>
-        </div>
-        <div class="cause-box">
-          <div class="c-icon">🔄</div>
-          <h4>No Market for Residue</h4>
-          <p>Crop residue has zero economic value to the farmer today. Until someone pays for it, nothing changes.</p>
-        </div>
-        <div class="cause-quote">
-          "The only way to stop the fires is to make not burning<br/>more profitable than burning." — The Biochar Bharat thesis
-        </div>
-      </div>
+    <div class="trap-result">
+      <div class="tr-icon">💡</div>
+      <p>The only way to stop the fires is to make <strong>not burning more profitable than burning.</strong> That's exactly what Biochar Bharat does.</p>
     </div>
+  </div>
 
-    <!-- SLIDE 4: SOLUTION -->
-    <div class="slide" id="s4">
-      <div class="s-label">The Solution</div>
-      <h2>Waste In. Wealth Out.<br/>Carbon Down.</h2>
-      <p class="sol-sub">
-        Biochar Bharat creates a farmer-powered carbon removal network — turning waste into income,
-        soil health, and verified carbon credits.
-      </p>
-      <div class="sol-steps">
-        <div class="sol-step">
-          <div class="s-num">STEP 01</div>
-          <div class="s-icon">🌾</div>
-          <h4>Collect Residue</h4>
-          <p>Farmers collect paddy straw, husks, and stubble that would otherwise be burned. We provide logistics support.</p>
-          <div class="s-result">→ Waste gets value</div>
+  <!-- ④ THE SOLUTION -->
+  <div class="slide" id="s4">
+    <div class="pad" style="display:flex;flex-direction:column;height:100%">
+      <span class="chip chip-green">The Solution</span>
+      <h2 style="font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px">We Convert Farm Waste Into<br/>Biochar — A Black Gold for Soil.</h2>
+      <p class="s4-sub" style="color:var(--muted);margin-bottom:24px">4 simple steps. Farmer earns. Soil improves. Carbon stays out of the air. Everyone wins.</p>
+      <div class="cycle" style="flex:1">
+        <div class="cstep cs1">
+          <div class="cs-icon">🌾</div>
+          <h4>Collect<br/>Crop Waste</h4>
+          <p>Farmers collect paddy straw, husks, stalks that would be burned.</p>
+          <div class="cs-gain">Waste gets value</div>
         </div>
-        <div class="sol-step">
-          <div class="s-num">STEP 02</div>
-          <div class="s-icon">⚗️</div>
-          <h4>Pyrolyse into Biochar</h4>
-          <p>Residue is converted in low-cost kilns through pyrolysis — controlled oxygen-limited burning that locks carbon.</p>
-          <div class="s-result">→ Carbon is captured</div>
+        <div class="carr">→</div>
+        <div class="cstep cs2">
+          <div class="cs-icon">⚗️</div>
+          <h4>Burn in<br/>Special Kiln</h4>
+          <p>In a low-oxygen kiln, waste converts to biochar — trapping carbon inside instead of releasing it.</p>
+          <div class="cs-gain">Carbon locked in</div>
         </div>
-        <div class="sol-step">
-          <div class="s-num">STEP 03</div>
-          <div class="s-icon">🌱</div>
-          <h4>Apply to Soil</h4>
-          <p>Biochar is mixed into farmland, improving water retention, soil nutrients, and yield — permanently.</p>
-          <div class="s-result">→ Soil health improves</div>
+        <div class="carr">→</div>
+        <div class="cstep cs3">
+          <div class="cs-icon">🌱</div>
+          <h4>Mix Into<br/>Farm Soil</h4>
+          <p>Biochar improves soil water retention, nutrients, and crop yields — permanently.</p>
+          <div class="cs-gain">Better harvests</div>
         </div>
-        <div class="sol-step">
-          <div class="s-num">STEP 04</div>
-          <div class="s-icon">💰</div>
-          <h4>Earn Carbon Credits</h4>
-          <p>We aggregate verified carbon removal across thousands of farms, sell credits to global buyers, pay farmers directly.</p>
-          <div class="s-result">→ Farmer earns income</div>
+        <div class="carr">→</div>
+        <div class="cstep cs4">
+          <div class="cs-icon">💰</div>
+          <h4>Sell Carbon<br/>Credits + Biochar</h4>
+          <p>We verify the carbon removal and sell credits to global companies. Farmer gets paid directly.</p>
+          <div class="cs-gain">Farmer earns ₹</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SLIDE 5: MARKET -->
-    <div class="slide" id="s5">
-      <div class="s-label">Market Opportunity</div>
-      <h2>A Multi-Billion Dollar<br/>Convergence</h2>
-      <div class="market-grid">
-        <div class="market-card m-tam">
-          <div>
-            <div class="m-val">$2B+</div>
-            <h4>Total Addressable Market</h4>
-            <p>India's voluntary carbon market + agricultural biochar sales + soil amendment market — growing at 30%+ annually as ESG mandates tighten.</p>
-          </div>
-          <span class="tag badge-gold">TAM</span>
+  <!-- ⑤ THE 3 WINS -->
+  <div class="slide" id="s5">
+    <div class="pad" style="display:flex;flex-direction:column;height:100%">
+      <span class="chip chip-green">Why This Works</span>
+      <h2 style="font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px">One Action. Three Wins.</h2>
+      <p class="s5-sub" style="color:var(--muted);margin-bottom:24px">Converting waste to biochar simultaneously solves three massive problems.</p>
+      <div class="wins">
+        <div class="win w-farmer">
+          <div class="w-icon">👨‍🌾</div>
+          <h3>Farmer Gets<br/>Extra Income</h3>
+          <div class="w-num">₹5,000–15,000</div>
+          <div class="w-num-label">extra per acre per season</div>
+          <p>Farmers earn from waste they used to burn for free. Direct UPI payments, no middlemen.</p>
         </div>
-        <div class="market-card m-sam">
-          <div>
-            <div class="m-val">$400M</div>
-            <h4>Serviceable Addressable Market</h4>
-            <p>North India's stubble burning belt — Punjab, Haryana, UP — where 35M+ tonnes of residue is burned annually, all convertible to biochar.</p>
-          </div>
-          <span class="tag badge-green">SAM</span>
+        <div class="win w-soil">
+          <div class="w-icon">🌿</div>
+          <h3>Soil Gets<br/>Healthier</h3>
+          <div class="w-num">30%</div>
+          <div class="w-num-label">average yield increase</div>
+          <p>Biochar in soil retains water and nutrients. Better next season, and every season after.</p>
         </div>
-        <div class="market-card m-som">
-          <div>
-            <div class="m-val">$20M</div>
-            <h4>Target — Year 3</h4>
-            <p>10,000 farmer network, 50,000 tonnes biochar/year, 50,000 verified carbon credits sold at $50–200/tonne.</p>
-          </div>
-          <span class="tag" style="background:rgba(100,140,255,0.2);color:#90aaff;border:1px solid rgba(100,140,255,0.3)">SOM</span>
-        </div>
-      </div>
-      <div class="market-note">
-        Biochar carbon credits currently trade at $50–$200/tonne on voluntary markets — 3–10x higher than forestry credits due to permanence. Global voluntary carbon market projected to reach $50B by 2030.
-      </div>
-    </div>
-
-    <!-- SLIDE 6: BUSINESS MODEL -->
-    <div class="slide" id="s6">
-      <div class="s-label">Business Model</div>
-      <h2>Four Revenue Streams,<br/>One Network Effect</h2>
-      <div class="bm-grid">
-        <div class="bm-card">
-          <div class="bm-icon">🌍</div>
-          <div>
-            <h4>Carbon Credit Sales</h4>
-            <p>Aggregate verified biochar carbon removal from our farmer network and sell as premium credits to corporates, governments, and ESG funds globally.</p>
-            <div class="bm-rev">$50–200 per tonne · Primary revenue</div>
-            <div class="bm-timeline">Timeline: Month 12–18 (post MRV certification)</div>
-          </div>
-        </div>
-        <div class="bm-card">
-          <div class="bm-icon">🪨</div>
-          <div>
-            <h4>Biochar Product Sales</h4>
-            <p>Sell biochar directly to farmers, nurseries, agri-input companies, and horticulture businesses as a premium soil amendment.</p>
-            <div class="bm-rev">₹8,000–15,000 per tonne · Early revenue</div>
-            <div class="bm-timeline">Timeline: Month 3–6 (immediate after production)</div>
-          </div>
-        </div>
-        <div class="bm-card">
-          <div class="bm-icon">⚙️</div>
-          <div>
-            <h4>Platform & Network Fee</h4>
-            <p>As we scale, charge a % platform fee for connecting carbon buyers to verified farm-level removal — like a carbon marketplace for Indian agriculture.</p>
-            <div class="bm-rev">15–20% transaction fee · Scale revenue</div>
-            <div class="bm-timeline">Timeline: Year 2+ (as network grows)</div>
-          </div>
-        </div>
-        <div class="bm-card">
-          <div class="bm-icon">🏛️</div>
-          <div>
-            <h4>Government & Grant Projects</h4>
-            <p>Partner with state govts (Punjab, Haryana), NABARD, and international climate funds to deploy biochar programs at district scale.</p>
-            <div class="bm-rev">Project-based contracts · Non-dilutive capital</div>
-            <div class="bm-timeline">Timeline: Month 6–12 (parallel track)</div>
-          </div>
+        <div class="win w-carbon">
+          <div class="w-icon">🌍</div>
+          <h3>Carbon Stays<br/>Out of Air</h3>
+          <div class="w-num">1,000 yrs</div>
+          <div class="w-num-label">carbon stays locked in soil</div>
+          <p>Unlike burning or rotting, biochar traps carbon for centuries. This is real, permanent removal.</p>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SLIDE 7: FINANCIALS -->
-    <div class="slide" id="s7">
-      <div class="s-label">Financial Projections</div>
-      <h2>Unit Economics &amp; Scale</h2>
-      <table class="fin-table">
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th>MVP — Year 1</th>
-            <th>Growth — Year 2</th>
-            <th>Scale — Year 3</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Farmer Partners</td>
-            <td>20–50</td>
-            <td>500–1,000</td>
-            <td>10,000+</td>
-          </tr>
-          <tr>
-            <td>Biochar Produced</td>
-            <td>~50 tonnes</td>
-            <td>2,500 tonnes</td>
-            <td>50,000 tonnes</td>
-          </tr>
-          <tr>
-            <td>Carbon Credits Generated</td>
-            <td>Baseline data only</td>
-            <td>2,000 credits</td>
-            <td>50,000 credits</td>
-          </tr>
-          <tr>
-            <td>Revenue (Biochar Sales)</td>
-            <td>₹4–8 Lakhs</td>
-            <td>₹2–3 Crore</td>
-            <td>₹40 Crore</td>
-          </tr>
-          <tr>
-            <td>Revenue (Carbon Credits)</td>
-            <td>—</td>
-            <td>₹1–2 Crore</td>
-            <td>₹25–40 Crore</td>
-          </tr>
-          <tr class="highlight-row">
-            <td>Total Revenue</td>
-            <td class="green">₹4–8 Lakhs</td>
-            <td class="green">₹3–5 Crore</td>
-            <td class="green">₹65–80 Crore</td>
-          </tr>
-          <tr>
-            <td>Farmer Payout (50%)</td>
-            <td>₹2–4 Lakhs</td>
-            <td>₹1.5–2.5 Crore</td>
-            <td>₹30–40 Crore</td>
-          </tr>
-          <tr>
-            <td>Gross Margin</td>
-            <td>~40%</td>
-            <td>~45%</td>
-            <td>~55%</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="fin-note">* Projections based on ₹10,000/tonne biochar blended price and $80/tonne average carbon credit price. Farmer receives 50% of all revenue generated from their residue.</div>
+  <!-- ⑥ HOW WE EARN -->
+  <div class="slide" id="s6">
+    <div class="pad" style="display:flex;flex-direction:column;height:100%">
+      <span class="chip chip-gold">Business Model</span>
+      <h2 style="font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px">How Biochar Bharat Makes Money</h2>
+      <p class="s6-sub" style="color:var(--muted);margin-bottom:20px">We earn from the same action two ways — and pay the farmer 50% of everything.</p>
+      <div class="flow" style="margin-bottom:clamp(14px,2vw,24px)">
+        <div class="fbox">
+          <div class="fb-icon">🌾</div>
+          <h5>Farmer's Waste</h5>
+          <p>Paddy straw, husks, stalks</p>
+        </div>
+        <div class="farr">→</div>
+        <div class="fbox">
+          <div class="fb-icon">⚗️</div>
+          <h5>Biochar Bharat</h5>
+          <p>We convert, verify, sell</p>
+        </div>
+        <div class="farr">→</div>
+        <div class="fbox" style="background:#e8f5e9;border-color:#a5d6a7">
+          <div class="fb-icon">💰</div>
+          <h5>2 Revenue Streams</h5>
+          <p>Biochar sales + Carbon credits</p>
+        </div>
+        <div class="farr">→</div>
+        <div class="fbox" style="background:#fff8e1;border-color:#ffe082">
+          <div class="fb-icon">🤝</div>
+          <h5>50% to Farmer</h5>
+          <p>Direct UPI, transparent</p>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rcard rc1">
+          <span class="r-when">Month 3 onwards</span>
+          <h5>🪨 Sell Biochar</h5>
+          <p>Sell biochar directly to farmers, nurseries, and agri-companies as a premium soil product.</p>
+          <div class="r-amount">₹8,000–15,000 / tonne</div>
+        </div>
+        <div class="rcard rc2">
+          <span class="r-when">Month 12 onwards</span>
+          <h5>🌍 Sell Carbon Credits</h5>
+          <p>Each tonne of biochar = 1 carbon credit. Sell to companies that need to offset their carbon footprint.</p>
+          <div class="r-amount">$50–200 / tonne</div>
+        </div>
+        <div class="rcard rc3">
+          <span class="r-when">Year 2 onwards</span>
+          <h5>⚙️ Platform Fee</h5>
+          <p>As we scale, charge a % fee to connect thousands of farmers to the global carbon market.</p>
+          <div class="r-amount">15–20% of transactions</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- SLIDE 8: TRACTION & ROADMAP -->
-    <div class="slide" id="s8">
-      <div class="s-label">Traction &amp; Roadmap</div>
-      <h2>Where We Are.<br/>Where We're Going.</h2>
+  <!-- ⑦ MARKET SIZE -->
+  <div class="slide" id="s7">
+    <span class="chip chip-dark" style="position:relative">Market Opportunity</span>
+    <h2 style="margin-bottom:6px;position:relative">This Is a Billion Dollar Market<br/>That Nobody Has Unlocked Yet.</h2>
+    <p class="s7-sub" style="position:relative;margin-bottom:24px">India's carbon market + agricultural biochar + soil health — all converging right now.</p>
+    <div class="market-circles" style="position:relative">
+      <div class="mc-wrap">
+        <div class="mcircle mc1">
+          <div class="mc-val">$2B+</div>
+          <div class="mc-label">Total Market<br/>(India carbon + biochar)</div>
+        </div>
+        <div class="mcircle mc2">
+          <div class="mc-val">$400M</div>
+          <div class="mc-label">Our Target<br/>Region</div>
+        </div>
+        <div class="mcircle mc3">
+          <div class="mc-val">$20M</div>
+          <div class="mc-label">Year 3<br/>Goal</div>
+        </div>
+      </div>
+      <div class="market-points">
+        <div class="mpoint">
+          <h5>Why carbon credits pay so much</h5>
+          <p>Biochar locks carbon for 1,000 years. That's far more permanent than trees. Buyers pay premium — $50–$200/tonne vs $5–$15 for forestry credits.</p>
+        </div>
+        <div class="mpoint">
+          <h5>Why now is the right time</h5>
+          <p>India launched its Carbon Credit Trading Scheme (CCTS) in 2023. ESG mandates in EU & US are forcing companies to buy quality credits urgently.</p>
+        </div>
+        <div class="mpoint">
+          <h5>500M tonnes of free raw material</h5>
+          <p>India burns the raw material for free every year. We just need to intercept it before it goes up in smoke.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ MVP -->
+  <div class="slide" id="s8">
+    <div class="pad" style="display:flex;flex-direction:column;height:100%">
+      <span class="chip chip-gold">Our Plan</span>
+      <h2 style="font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px">Start Small. Prove It Works.<br/>Then Scale Fast.</h2>
+      <p class="s8-sub" style="color:var(--muted);margin-bottom:24px">We don't need 10,000 farmers to prove the model. We need 20.</p>
       <div class="mvp-layout">
-        <div class="mvp-timeline">
-          <div class="mvp-item">
-            <div class="mvp-dot-col">
-              <div class="mvp-dot" style="background:#6fdb8e"></div>
-              <div class="mvp-line"></div>
-            </div>
-            <div class="mvp-text">
-              <span class="mvp-tag t-now">NOW</span>
-              <h5>Landing page live · Waitlist open</h5>
-              <p>Website launched at biocharbharat.com. Building initial farmer waitlist and investor pipeline.</p>
-            </div>
+        <div class="mvp-left">
+          <div class="mvp-phase ph-now">
+            <div class="ph-top"><div class="ph-dot"></div><span class="ph-tag">RIGHT NOW</span></div>
+            <h5>Website live · Waitlist building</h5>
+            <p>Collecting farmer sign-ups and investor interest. Building the team.</p>
           </div>
-          <div class="mvp-item">
-            <div class="mvp-dot-col">
-              <div class="mvp-dot" style="background:var(--gold)"></div>
-              <div class="mvp-line"></div>
-            </div>
-            <div class="mvp-text">
-              <span class="mvp-tag t-q1">Q3 2026</span>
-              <h5>Pilot: 20 farmers, 1 district</h5>
-              <p>Deploy 2–3 kilns in Punjab/Haryana. Produce first biochar. Run soil health tests. Pay first farmers.</p>
-            </div>
+          <div class="mvp-phase ph-q3">
+            <div class="ph-top"><div class="ph-dot"></div><span class="ph-tag">Q3 2026</span></div>
+            <h5>Pilot: 20 farmers, 1 district</h5>
+            <p>Deploy kilns in Punjab. Make first biochar. Pay first farmers. Test soil results.</p>
           </div>
-          <div class="mvp-item">
-            <div class="mvp-dot-col">
-              <div class="mvp-dot" style="background:#90aaff"></div>
-              <div class="mvp-line"></div>
-            </div>
-            <div class="mvp-text">
-              <span class="mvp-tag t-q2">Q4 2026</span>
-              <h5>Prove unit economics · Begin MRV</h5>
-              <p>Validate cost/tonne of biochar vs revenue. Begin MRV documentation for carbon credit certification.</p>
-            </div>
+          <div class="mvp-phase ph-q4">
+            <div class="ph-top"><div class="ph-dot"></div><span class="ph-tag">Q4 2026</span></div>
+            <h5>Prove the unit economics</h5>
+            <p>Does it cost less to produce biochar than we earn from selling it? If yes → we scale.</p>
           </div>
-          <div class="mvp-item">
-            <div class="mvp-dot-col">
-              <div class="mvp-dot" style="background:#ff8855"></div>
-              <div class="mvp-line"></div>
-            </div>
-            <div class="mvp-text">
-              <span class="mvp-tag t-q3">2027</span>
-              <h5>Scale to 1,000 farmers · First credits sold</h5>
-              <p>Expand to 3–5 districts. Get first Verra/Gold Standard certification. Sell first verified carbon credits.</p>
-            </div>
+          <div class="mvp-phase ph-y2">
+            <div class="ph-top"><div class="ph-dot"></div><span class="ph-tag">2027</span></div>
+            <h5>1,000 farmers · First carbon credits sold</h5>
+            <p>Get Verra / Gold Standard certified. Sell first verified credits to global buyers.</p>
           </div>
         </div>
-        <div class="mvp-metrics">
-          <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">MVP Success Metrics</div>
-          <div class="mvp-metric">
-            <h5>Farmer conversion rate</h5>
-            <span>&gt; 60%</span>
+        <div class="mvp-right">
+          <h4>What success looks like at 20 farmers:</h4>
+          <div class="prove-grid">
+            <div class="pcard">
+              <div class="pc-q">Farmers who join, stay?</div>
+              <div class="pc-a">&gt; 60%</div>
+              <div class="pc-target">retention rate</div>
+            </div>
+            <div class="pcard">
+              <div class="pc-q">Cost to make 1 tonne?</div>
+              <div class="pc-a">&lt; ₹6,000</div>
+              <div class="pc-target">per tonne biochar</div>
+            </div>
+            <div class="pcard">
+              <div class="pc-q">Yield improvement?</div>
+              <div class="pc-a">&gt; 15%</div>
+              <div class="pc-target">increase in crops</div>
+            </div>
+            <div class="pcard">
+              <div class="pc-q">Farmer earns extra?</div>
+              <div class="pc-a">₹5,000+</div>
+              <div class="pc-target">per acre added</div>
+            </div>
           </div>
-          <div class="mvp-metric">
-            <h5>Cost per tonne biochar</h5>
-            <span>&lt; ₹6,000</span>
-          </div>
-          <div class="mvp-metric">
-            <h5>Farmer retention (next season)</h5>
-            <span>&gt; 70%</span>
-          </div>
-          <div class="mvp-metric">
-            <h5>Yield delta with biochar</h5>
-            <span>&gt; 15%</span>
-          </div>
-          <div class="mvp-metric">
-            <h5>Farmer income added / acre</h5>
-            <span>₹5,000+</span>
+          <div style="background:#e8f5e9;border-radius:12px;padding:clamp(12px,1.6vw,20px);border:1.5px solid #a5d6a7;margin-top:auto">
+            <p style="font-size:clamp(11px,1.2vw,14px);color:#1b5e20;line-height:1.6">
+              ✅ If these 4 numbers check out at 20 farmers —<br/>
+              <strong>we have proof of concept and raise Series A.</strong>
+            </p>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SLIDE 9: WHY US -->
-    <div class="slide" id="s9">
-      <div class="s-label">Competitive Advantage</div>
-      <h2>Why Biochar Bharat Wins</h2>
-      <div class="moat-grid">
-        <div class="moat-card">
-          <div class="m-icon">🇮🇳</div>
-          <h4>First Mover in India</h4>
-          <p>No one is building a farmer-aggregated biochar carbon network at scale in India. We are defining the category before competition arrives.</p>
+  <!-- ⑨ PROJECTIONS -->
+  <div class="slide" id="s9">
+    <div class="pad" style="display:flex;flex-direction:column;height:100%">
+      <span class="chip chip-green">Projections</span>
+      <h2 style="font-size:clamp(22px,3.5vw,44px);color:var(--text);margin-bottom:6px">What the Numbers Look Like</h2>
+      <p class="s9-sub" style="color:var(--muted);margin-bottom:24px">More farmers = more biochar = more credits = more revenue. It compounds.</p>
+      <div class="proj-stages">
+        <div class="pstage ps1">
+          <span class="ps-tag">Year 1 — Pilot</span>
+          <h4>Prove It</h4>
+          <div class="ps-farmers" style="color:#aaa">20–50</div>
+          <div class="ps-label" style="color:#aaa">farmer partners</div>
+          <div class="ps-items">
+            <div class="ps-item"><span>Biochar made</span><span>~50 tonnes</span></div>
+            <div class="ps-item"><span>Revenue</span><span>₹4–8 Lakhs</span></div>
+            <div class="ps-item"><span>Farmer payout</span><span>₹2–4 Lakhs</span></div>
+            <div class="ps-item"><span>Goal</span><span style="color:var(--green)">Prove model ✓</span></div>
+          </div>
         </div>
-        <div class="moat-card">
-          <div class="m-icon">🤝</div>
-          <h4>Farmer Trust Moat</h4>
-          <p>Relationships with 1,000 farmers can't be replicated overnight. Our network is our deepest defensible asset — it compounds with every farmer added.</p>
+        <div class="pstage ps2">
+          <span class="ps-tag">Year 2 — Grow</span>
+          <h4>Scale Up</h4>
+          <div class="ps-farmers">1,000</div>
+          <div class="ps-label">farmer partners</div>
+          <div class="ps-items">
+            <div class="ps-item"><span>Biochar made</span><span>2,500 tonnes</span></div>
+            <div class="ps-item"><span>Carbon credits</span><span>2,000 credits</span></div>
+            <div class="ps-item"><span>Revenue</span><span>₹3–5 Crore</span></div>
+            <div class="ps-item"><span>Farmer payout</span><span>₹1.5–2.5 Crore</span></div>
+          </div>
         </div>
-        <div class="moat-card">
-          <div class="m-icon">📊</div>
-          <h4>Data Advantage</h4>
-          <p>Soil health, biochar yield, and carbon data from thousands of Indian farms becomes a unique dataset no competitor can buy or replicate.</p>
-        </div>
-        <div class="moat-card">
-          <div class="m-icon">🏛️</div>
-          <h4>Policy Tailwinds</h4>
-          <p>India's stubble burning ban, carbon credit policy (CCTS), and climate commitments (NDC) all create structural demand for exactly what we do.</p>
-        </div>
-        <div class="moat-card">
-          <div class="m-icon">⚗️</div>
-          <h4>Premium Credit Quality</h4>
-          <p>Biochar is one of the most permanent carbon removal methods. Our credits command $50–200/tonne vs $5–15 for forestry — 10x better economics.</p>
-        </div>
-        <div class="moat-card">
-          <div class="m-icon">🌐</div>
-          <h4>Global Market Access</h4>
-          <p>We sell into the global voluntary carbon market — not dependent on Indian buyers alone. ESG mandates in EU, US, and UK drive demand for our credits.</p>
+        <div class="pstage ps3">
+          <span class="ps-tag">Year 3 — Scale</span>
+          <h4>Lead India</h4>
+          <div class="ps-farmers">10,000</div>
+          <div class="ps-label">farmer partners</div>
+          <div class="ps-items">
+            <div class="ps-item"><span>Biochar made</span><span>50,000 tonnes</span></div>
+            <div class="ps-item"><span>Carbon credits</span><span>50,000 credits</span></div>
+            <div class="ps-item"><span>Revenue</span><span>₹65–80 Crore</span></div>
+            <div class="ps-item"><span>Farmer payout</span><span>₹30–40 Crore</span></div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SLIDE 10: IMPACT -->
-    <div class="slide" id="s10">
-      <div class="s-label">Impact at Scale</div>
-      <h2>What 10,000 Farmers<br/>Can Change</h2>
-      <div class="impact-row">
-        <div class="impact-num-card">
-          <div class="in-val">50,000</div>
-          <div class="in-label">Tonnes of CO₂ permanently removed per year</div>
-        </div>
-        <div class="impact-num-card">
-          <div class="in-val">₹500 Cr</div>
-          <div class="in-label">Additional farmer income generated over 5 years</div>
-        </div>
-        <div class="impact-num-card">
-          <div class="in-val">30%</div>
-          <div class="in-label">Average yield increase on biochar-treated farmland</div>
-        </div>
-        <div class="impact-num-card">
-          <div class="in-val">10M+</div>
-          <div class="in-label">People breathing cleaner air as fires are replaced</div>
-        </div>
-      </div>
-      <div class="un-sdgs">
-        <span>UN SDG Alignment:</span>
-        <span class="sdg-tag sdg1">SDG 1 — No Poverty</span>
-        <span class="sdg-tag sdg2">SDG 2 — Zero Hunger</span>
-        <span class="sdg-tag sdg3">SDG 13 — Climate Action</span>
-        <span class="sdg-tag sdg4">SDG 15 — Life on Land</span>
-        <span class="sdg-tag" style="background:rgba(45,122,69,0.2);color:#6fdb8e">SDG 3 — Good Health</span>
-      </div>
+  <!-- ⑩ THE ASK -->
+  <div class="slide" id="s10">
+    <span class="chip chip-dark" style="position:relative">Join Us</span>
+    <h2 style="position:relative">We Need ₹50 Lakhs<br/>to Light the Match.</h2>
+    <p class="a-sub">To run the pilot, deploy kilns, onboard farmers, and prove the model works. That's all we need to unlock the rest.</p>
+    <div class="ask-row">
+      <div class="abox"><div class="av">₹50L</div><div class="al">Seed Round</div></div>
+      <div class="abox"><div class="av">18</div><div class="al">Months Runway</div></div>
+      <div class="abox"><div class="av">1,000</div><div class="al">Farmers by Year 1</div></div>
+      <div class="abox"><div class="av">4x</div><div class="al">Projected Return Y3</div></div>
     </div>
-
-    <!-- SLIDE 11: THE ASK -->
-    <div class="slide" id="s11">
-      <div class="s-label">The Ask</div>
-      <h2>Join Us at the Ground Floor</h2>
-      <p class="ask-sub">We are raising our Seed round to prove unit economics and build India's first farmer carbon network.</p>
-      <div class="ask-boxes">
-        <div class="ask-box">
-          <div class="ab-val">₹50L</div>
-          <div class="ab-label">Seed Round Target</div>
-        </div>
-        <div class="ask-box">
-          <div class="ab-val">18 mo</div>
-          <div class="ab-label">Runway</div>
-        </div>
-        <div class="ask-box">
-          <div class="ab-val">1,000</div>
-          <div class="ab-label">Farmers by end of Year 1</div>
-        </div>
-      </div>
-      <div class="ask-use">
-        <span class="ask-use-item">🔥 Kiln deployment — 40%</span>
-        <span class="ask-use-item">👨‍🌾 Farmer onboarding — 25%</span>
-        <span class="ask-use-item">🔬 MRV & certification — 20%</span>
-        <span class="ask-use-item">⚙️ Tech & ops — 15%</span>
-      </div>
-      <div class="ask-contact">
-        <a href="mailto:biocharbharat.official@gmail.com">biocharbharat.official@gmail.com</a>
-        <a href="tel:+917830501734">+91 78305 01734</a>
-        <a href="https://www.biocharbharat.com">www.biocharbharat.com</a>
-      </div>
+    <div class="use-row">
+      <span class="use-tag">🔥 Kilns &amp; Equipment — 40%</span>
+      <span class="use-tag">👨‍🌾 Farmer Onboarding — 25%</span>
+      <span class="use-tag">🔬 Carbon Verification — 20%</span>
+      <span class="use-tag">⚙️ Team &amp; Ops — 15%</span>
     </div>
+    <div class="ask-contact">
+      <a href="mailto:biocharbharat.official@gmail.com">biocharbharat.official@gmail.com</a>
+      <a href="tel:+917830501734">+91 78305 01734</a>
+      <a href="https://www.biocharbharat.com">www.biocharbharat.com</a>
+    </div>
+  </div>
 
-  </div><!-- /.slide-wrapper -->
-</div><!-- /#deck -->
+</div></div>
 
 <!-- NAV -->
 <div id="nav">
-  <button id="prevBtn" disabled>&#8592;</button>
+  <button id="prev" disabled>&#8592;</button>
   <div class="dots" id="dots"></div>
-  <span id="counter">1 / 11</span>
-  <button id="nextBtn">&#8594;</button>
+  <span id="ctr">1 / 10</span>
+  <button id="next">&#8594;</button>
 </div>
 
 <script>
-  const slides = document.querySelectorAll('.slide');
-  const total = slides.length;
-  let current = 0;
+  const slides=document.querySelectorAll('.slide'),total=slides.length;
+  let cur=0;
+  const prev=document.getElementById('prev'),next=document.getElementById('next'),
+        ctr=document.getElementById('ctr'),dotsEl=document.getElementById('dots');
 
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const counter = document.getElementById('counter');
-  const dotsEl  = document.getElementById('dots');
-
-  // Build dots
-  slides.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => goTo(i));
+  slides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' on':'');
+    d.onclick=()=>go(i);
     dotsEl.appendChild(d);
   });
 
-  function goTo(n) {
-    slides[current].classList.remove('active');
-    dotsEl.children[current].classList.remove('active');
-    current = Math.max(0, Math.min(n, total - 1));
-    slides[current].classList.add('active');
-    dotsEl.children[current].classList.add('active');
-    counter.textContent = (current + 1) + ' / ' + total;
-    prevBtn.disabled = current === 0;
-    nextBtn.disabled = current === total - 1;
+  function go(n){
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('on');
+    cur=Math.max(0,Math.min(n,total-1));
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('on');
+    ctr.textContent=(cur+1)+' / '+total;
+    prev.disabled=cur===0;
+    next.disabled=cur===total-1;
   }
 
-  prevBtn.addEventListener('click', () => goTo(current - 1));
-  nextBtn.addEventListener('click', () => goTo(current + 1));
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
-  });
-
-  // Touch/swipe support
-  let touchStartX = 0;
-  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
-  document.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
-  });
+  prev.onclick=()=>go(cur-1);
+  next.onclick=()=>go(cur+1);
+  document.onkeydown=e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')go(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);
+  };
+  let tx=0;
+  document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+  document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)d>0?go(cur+1):go(cur-1)});
 </script>
-
 </body>
 </html>
