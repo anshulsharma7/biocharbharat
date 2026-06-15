@@ -23,7 +23,7 @@ joinForm.addEventListener('submit', async (e) => {
   submitBtn.textContent = 'Sending…';
 
   const formData = new FormData(joinForm);
-  formData.append('access_key', 'REPLACE_WITH_WEB3FORMS_KEY');
+  formData.append('access_key', 'c22828fd-9b93-4f54-930d-f6b13187ecaa');
   formData.append('subject', 'New Biochar Bharat Waitlist Registration — ' + formData.get('role'));
   formData.append('from_name', 'Biochar Bharat Website');
 
